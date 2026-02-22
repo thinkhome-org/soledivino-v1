@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Amarone della Valpolicella",
+    "description": "Zrozeno v srdci vulkanické půdy. Toto víno, skutečné \"Slzy Kristovy\", v sobě nese sílu Vesuvu a teplo italského slunce. Nabízí bohatou, hlubokou chuť červených plodů s jemně kouřovým podtónem.",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png"
+  },
+  {
+    "name": "Soave Classico",
+    "description": "Zrozeno v srdci vulkanické půdy. Toto víno, skutečné \"Slzy Kristovy\", v sobě nese sílu Vesuvu a teplo italského slunce. Nabízí bohatou, hlubokou chuť červených plodů s jemně kouřovým podtónem.",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png"
+  },
+  {
+    "name": "Rosato di Casa",
+    "description": "Zrozeno v srdci vulkanické půdy. Toto víno, skutečné \"Slzy Kristovy\", v sobě nese sílu Vesuvu a teplo italského slunce. Nabízí bohatou, hlubokou chuť červených plodů s jemně kouřovým podtónem.",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png"
+  }
+]
+

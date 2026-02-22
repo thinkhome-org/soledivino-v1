@@ -1,0 +1,128 @@
+[
+  {
+    "name": "Barolo Bussia",
+    "region": "Itálie",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png",
+    "description": "Robustní a harmonické Barolo s jasnou minerálností a hlubokými tóny červeného ovoce. Jemné třísloviny a dlouhý, vyvážený dochuť potvrzují jeho původ z prestižní oblasti Bussia."
+  },
+  {
+    "name": "Amarone",
+    "region": "Itálie",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png",
+    "description": "Plné červené víno s bohatou strukturou, tóny sušeného ovoce a kakaa. Díky tradiční metodě appassimento nabízí výrazný charakter i sametový závěr."
+  },
+  {
+    "name": "Costadoro Marche Rosso",
+    "region": "Itálie",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png",
+    "description": "Elegantní cuvee z regionu Marche s jemnou ovocností a svěží kyselinou. Univerzální víno pro každodenní párování i slavnostní večeři."
+  },
+  {
+    "name": "Chianti Classico",
+    "region": "Itálie",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png",
+    "description": "Tradiční toskánské víno s tóny třešní, fialek a jemného koření. Příjemná kyselina a střední tělo z něj dělají výborného partnera k těstovinám."
+  },
+  {
+    "name": "Montepulciano d'Abruzzo",
+    "region": "Itálie",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png",
+    "description": "Šťavnaté a přístupné červené víno s tóny švestek a lesního ovoce. Měkké třísloviny a ovocný profil zajišťují snadnou pitelnost."
+  },
+  {
+    "name": "Nero d'Avola",
+    "region": "Itálie",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png",
+    "description": "Sicilská klasika s tmavým ovocem, lehkým nádechem bylin a koření. Plnější styl doprovází příjemná hebkost a dlouhá dochuť."
+  },
+  {
+    "name": "Primitivo di Manduria",
+    "region": "Itálie",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png",
+    "description": "Koncentrované víno z jihu Itálie s tóny zralých švestek, čokolády a vanilky. Bohatá chuť je vyvážená jemnou kyselinou."
+  },
+  {
+    "name": "Brunello di Montalcino",
+    "region": "Itálie",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png",
+    "description": "Ikonické toskánské víno s komplexní vůní třešní, tabáku a cedru. Výrazná struktura a noblesní závěr předurčují víno k delší archivaci."
+  },
+  {
+    "name": "Valpolicella Ripasso",
+    "region": "Itálie",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png",
+    "description": "Hladké červené víno s tóny višní a jemného koření. Metoda ripasso mu dodává větší hloubku a kulatější chuťový profil."
+  },
+  {
+    "name": "Soave Classico",
+    "region": "Itálie",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png",
+    "description": "Lehčí a svěží styl s citrusovým charakterem a minerálním podtónem. Skvěle doplní ryby, mořské plody i lehké saláty."
+  },
+  {
+    "name": "Falanghina",
+    "region": "Itálie",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png",
+    "description": "Aromatické bílé víno s květinovým projevem a tóny zralých citrusů. Svěží závěr a jemná mineralita dodávají vínu eleganci."
+  },
+  {
+    "name": "Vermentino",
+    "region": "Itálie",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png",
+    "description": "Středomořsky svěží víno s nádechem limetky, bylinek a slanosti. Živá kyselina a lehké tělo z něj dělají ideální letní volbu."
+  },
+  {
+    "name": "Greco di Tufo",
+    "region": "Itálie",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png",
+    "description": "Minerální bílé víno z vulkanického podloží s tóny hrušky a citrusové kůry. Výrazná struktura a čistá dochuť vyniknou k rybám."
+  },
+  {
+    "name": "Lugana",
+    "region": "Itálie",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png",
+    "description": "Jemné a harmonické bílé víno s tóny peckovin, květin a bylin. Elegantní styl podporuje svěží kyselina a hladký závěr."
+  },
+  {
+    "name": "Etna Rosso",
+    "region": "Itálie",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png",
+    "description": "Sofistikované sicilské červené víno s vulkanickou mineralitou a tóny višní. Kombinuje lehkost s hloubkou a jemnými tříslovinami."
+  },
+  {
+    "name": "Lambrusco Grasparossa",
+    "region": "Itálie",
+    "color": "#8B2D3D",
+    "image": "/placeholder-wine.png",
+    "description": "Šťavnaté, ovocné víno s příjemnou svěžestí a jemným perlením. Vyniká tóny tmavého ovoce a velmi pitelným stylem."
+  },
+  {
+    "name": "Cannonau",
+    "region": "Itálie",
+    "color": "#A18136",
+    "image": "/placeholder-wine.png",
+    "description": "Plnější sardinské červené víno s tóny ostružin, bylin a koření. Vyvážená struktura a teplý charakter doprovází dlouhý závěr."
+  },
+  {
+    "name": "Rosato di Puglia",
+    "region": "Itálie",
+    "color": "#BF8993",
+    "image": "/placeholder-wine.png",
+    "description": "Svěží růžové víno s tóny jahod, granátového jablka a květin. Lehké tělo a čistý profil skvěle fungují jako aperitiv."
+  }
+]
