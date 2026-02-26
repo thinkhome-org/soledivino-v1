@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import winesData from "../data/products-wines.json";
+import { toWineSlug } from "../lib/wine-slug";
 
 type ProductWine = {
     name: string;
@@ -26,18 +28,37 @@ function chunkWines(items: ProductWine[], size: number) {
 }
 
 export default function ProductsPage() {
+    const router = useRouter();
     const rows = chunkWines(wines, WINES_PER_ROW);
     const [selectedWine, setSelectedWine] = useState<ProductWine | null>(null);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+
+    const handleMoreClick = () => {
+        if (!selectedWine || isTransitioning) {
+            return;
+        }
+
+        setIsTransitioning(true);
+        const targetPath = `/about-wine/${toWineSlug(selectedWine.name)}`;
+        window.setTimeout(() => {
+            router.push(targetPath);
+        }, 320);
+    };
 
     return (
         <div className="min-h-screen bg-[#EFEFEF]">
             <Navbar />
 
-            <main className="w-full">
-                <div className="grid grid-cols-1 transition-all duration-500 md:grid-cols-[0_minmax(0,1fr)] md:data-[open=true]:grid-cols-[380px_minmax(0,1fr)]" data-open={selectedWine ? "true" : "false"}>
+            <main className="relative w-full overflow-hidden" data-transitioning={isTransitioning ? "true" : "false"}>
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-0 bg-white transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] data-[transitioning=true]:w-full" data-transitioning={isTransitioning ? "true" : "false"} />
+                <div
+                    className="relative z-10 grid grid-cols-1 transition-all duration-500 md:grid-cols-[0_minmax(0,1fr)] md:data-[open=true]:grid-cols-[380px_minmax(0,1fr)] data-[transitioning=true]:opacity-0"
+                    data-open={selectedWine ? "true" : "false"}
+                    data-transitioning={isTransitioning ? "true" : "false"}
+                >
                     <aside className="h-full border-r border-black/10 bg-white">
                         {selectedWine && (
-                            <div key={selectedWine.name} className="h-full md:sticky md:top-0 md:max-h-screen md:overflow-y-auto">
+                            <div key={selectedWine.name} className="h-full transition-opacity duration-300 md:sticky md:top-0 md:max-h-screen md:overflow-y-auto md:data-[transitioning=true]:opacity-0" data-transitioning={isTransitioning ? "true" : "false"}>
                                 <div className="flex h-[480px] items-center justify-center" style={{ backgroundColor: selectedWine.color }}>
                                     <div className="panel-image-in relative h-[600px] w-[600px]">
                                         <Image src={selectedWine.image} alt={selectedWine.name} fill className="object-contain" sizes="180px" priority />
@@ -48,7 +69,12 @@ export default function ProductsPage() {
                                     <h2 className="panel-text-in-1 text-[46px] leading-[0.95] text-[#1D1D1D] font-serif">{selectedWine.name}</h2>
                                     <p className="panel-text-in-2 mt-1 text-[36px] leading-none text-[#1D1D1D] font-serif">{selectedWine.region}</p>
                                     <p className="panel-text-in-3 mx-auto mt-8 max-w-[250px] text-sm leading-relaxed text-[#1D1D1D]">{selectedWine.description}</p>
-                                    <button type="button" className="panel-text-in-4 mt-8 h-11 w-full rounded-md bg-black text-xl font-semibold text-white transition-colors hover:bg-black/90">
+                                    <button
+                                        type="button"
+                                        onClick={handleMoreClick}
+                                        disabled={isTransitioning}
+                                        className="panel-text-in-4 mt-8 flex h-11 w-full items-center justify-center rounded-md bg-black text-xl font-semibold text-white transition-colors hover:bg-black/90"
+                                    >
                                         Více
                                     </button>
                                 </div>
@@ -96,51 +122,6 @@ export default function ProductsPage() {
             </main>
 
             <Footer />
-            <style jsx global>{`
-                @keyframes panel-image-in {
-                    from {
-                        opacity: 0;
-                        transform: translateY(16px) scale(0.96);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
-                }
-                @keyframes panel-text-in {
-                    from {
-                        opacity: 0;
-                        transform: translateY(12px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-                .panel-image-in {
-                    animation: panel-image-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
-                    animation-delay: 280ms;
-                }
-                .panel-text-in-1,
-                .panel-text-in-2,
-                .panel-text-in-3,
-                .panel-text-in-4 {
-                    opacity: 0;
-                    animation: panel-text-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
-                }
-                .panel-text-in-1 {
-                    animation-delay: 360ms;
-                }
-                .panel-text-in-2 {
-                    animation-delay: 430ms;
-                }
-                .panel-text-in-3 {
-                    animation-delay: 500ms;
-                }
-                .panel-text-in-4 {
-                    animation-delay: 570ms;
-                }
-            `}</style>
         </div>
     );
 }

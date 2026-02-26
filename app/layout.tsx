@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Jost, Literata } from "next/font/google";
 import "./globals.css";
+import "./panel-animations.css";
 
 const jost = Jost({
   variable: "--font-jost",
