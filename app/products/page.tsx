@@ -49,7 +49,7 @@ export default function ProductsPage() {
         <div className="min-h-screen bg-[#EFEFEF]">
             <Navbar />
 
-            <main className="relative w-full overflow-hidden" data-transitioning={isTransitioning ? "true" : "false"}>
+            <main className="relative w-full" data-transitioning={isTransitioning ? "true" : "false"}>
                 <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-0 bg-white transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] data-[transitioning=true]:w-full" data-transitioning={isTransitioning ? "true" : "false"} />
                 <div
                     className="relative z-10 grid grid-cols-1 transition-all duration-500 md:grid-cols-[0_minmax(0,1fr)] md:data-[open=true]:grid-cols-[380px_minmax(0,1fr)] data-[transitioning=true]:opacity-0"
@@ -58,14 +58,18 @@ export default function ProductsPage() {
                 >
                     <aside className="h-full border-r border-black/10 bg-white">
                         {selectedWine && (
-                            <div key={selectedWine.name} className="h-full transition-opacity duration-300 md:sticky md:top-0 md:max-h-screen md:overflow-y-auto md:data-[transitioning=true]:opacity-0" data-transitioning={isTransitioning ? "true" : "false"}>
-                                <div className="flex h-[480px] items-center justify-center" style={{ backgroundColor: selectedWine.color }}>
-                                    <div className="panel-image-in relative h-[600px] w-[600px]">
-                                        <Image src={selectedWine.image} alt={selectedWine.name} fill className="object-contain" sizes="180px" priority />
+                            <div
+                                key={selectedWine.name}
+                                className="flex h-full min-h-0 flex-col transition-opacity duration-300 md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:overflow-y-auto md:data-[transitioning=true]:opacity-0"
+                                data-transitioning={isTransitioning ? "true" : "false"}
+                            >
+                                <div className="flex min-h-[380px] flex-1 items-center justify-center md:min-h-0 md:flex-1" style={{ backgroundColor: selectedWine.color }}>
+                                    <div className="panel-image-in relative h-[600px] w-[600px] shrink-0 md:h-[320px] md:w-[320px]">
+                                        <Image src={selectedWine.image} alt={selectedWine.name} fill className="object-contain" sizes="320px" priority />
                                     </div>
                                 </div>
 
-                                <div className="px-8 py-10 text-center">
+                                <div className="shrink-0 px-8 py-10 text-center">
                                     <h2 className="panel-text-in-1 text-[46px] leading-[0.95] text-[#1D1D1D] font-serif">{selectedWine.name}</h2>
                                     <p className="panel-text-in-2 mt-1 text-[36px] leading-none text-[#1D1D1D] font-serif">{selectedWine.region}</p>
                                     <p className="panel-text-in-3 mx-auto mt-8 max-w-[250px] text-sm leading-relaxed text-[#1D1D1D]">{selectedWine.description}</p>
