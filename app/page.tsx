@@ -9,7 +9,7 @@ import NasVyber from "./components/nas-vyber";
 export default function Home() {
     return (
         <div>
-            {/* <Navbar />  */}
+            <Navbar /> 
             <Hero />
             <WineCarousel />
             <Filozofie />
