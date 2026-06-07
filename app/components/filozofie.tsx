@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ButtonLink } from "./button";
 
 export default function Filozofie() {
     return (
@@ -13,11 +13,13 @@ export default function Filozofie() {
                 sizes="100vw"
             />
 
-            {/* White content panel with non-circular side mask */}
-            <div className="absolute top-0 right-0 h-full w-full md:w-[56%] bg-white flex items-center">
-                <div className="hidden md:block absolute -left-[180px] inset-y-0 w-[230px] bg-white [clip-path:ellipse(78%_55%_at_100%_50%)]" />
+            <div
+                aria-hidden
+                className="absolute inset-0 hidden bg-white section-slash-white md:block"
+            />
 
-                <div className="relative z-10 px-8 md:px-14 lg:px-20 py-16 md:py-12 max-w-xl ml-auto md:ml-12 lg:ml-16">
+            <div className="absolute top-0 right-0 z-10 flex h-full w-full items-center bg-white md:w-[56%] md:bg-transparent">
+                <div className="relative px-8 py-16 md:ml-12 md:px-14 md:py-12 lg:ml-16 lg:px-20 max-w-xl ml-auto">
                     <h2 className="text-4xl md:text-5xl font-serif font-bold text-black mb-8">
                         Naše filozofie
                     </h2>
@@ -36,12 +38,7 @@ export default function Filozofie() {
                         Vesuvu až po minerální pobřežní oblasti.
                     </p>
 
-                    <Link
-                        href="/nase-vina"
-                        className="inline-block text-white font-bold font-sans bg-black px-10 py-4 rounded-xl hover:bg-black/90 transition-colors"
-                    >
-                        Naše vína
-                    </Link>
+                    <ButtonLink href="/products">Naše vína</ButtonLink>
                 </div>
             </div>
         </section>

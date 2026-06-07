@@ -21,10 +21,13 @@ export default function Navbar() {
                         <Link href="/products" className="text-white hover:text-white/80 transition-colors font-sans">
                             Naše vína
                         </Link>
+                        <Link href="/mapa" className="text-white hover:text-white/80 transition-colors font-sans">
+                            Mapa
+                        </Link>
                         <Link href="/zadost" className="text-white hover:text-white/80 transition-colors font-sans">
                             Žádost
                         </Link>
-                        <Link href="/kontakty" className="text-white hover:text-white/80 transition-colors font-sans">
+                        <Link href="/#kontakt" className="text-white hover:text-white/80 transition-colors font-sans">
                             Kontakty
                         </Link>
                     </div>

@@ -2,14 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { ButtonLink } from "./button";
 import { useEffect, useMemo, useState } from "react";
 import winesData from "../data/wines.json";
+import { toWineSlug } from "../lib/wine-slug";
 
 type Wine = {
     name: string;
     description: string;
     color: string;
     image: string;
+    productName: string;
 };
 
 const wines: Wine[] = winesData;
@@ -58,12 +61,18 @@ export default function WineCarousel() {
                         <p className="text-lg md:text-xl font-sans max-w-xl">{activeWine.description}</p>
 
                         <div className="flex flex-col sm:flex-col gap-8 sm:items-start">
-                            <Link href="/" className="underline text-white text-lg font-sans">
+                            <Link
+                                href={`/about-wine/${toWineSlug(activeWine.productName)}`}
+                                className="underline text-white text-lg font-sans"
+                            >
                                 Více o produktu
                             </Link>
-                            <Link href="/" className="text-white text-xl font-bold transition-colors font-sans bg-[#A18136] px-12 py-4 rounded-xl w-fit">
+                            <ButtonLink
+                                href={`/products?wine=${toWineSlug(activeWine.productName)}`}
+                                variant="gold"
+                            >
                                 Přidat
-                            </Link>
+                            </ButtonLink>
                         </div>
                     </div>
 

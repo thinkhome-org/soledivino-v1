@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="bg-black text-white">
+        <footer id="kontakt" className="bg-black text-white">
             <div className="max-w-7xl mx-auto px-6 py-12 flex flex-row gap-12 items-center">
                 <Link href="/" className="flex flex-row gap-4 items-center">
                     <Image src="logo.svg" alt="Logo" height={20} width={20} />
@@ -13,7 +13,7 @@ export default function Footer() {
                 <Link href="/">
                     <p>Podmínky použití</p>
                 </Link>
-                <Link href="/">
+                <Link href="/zadost">
                     <p>Kontakt</p>
                 </Link>
                 <Link href="/">

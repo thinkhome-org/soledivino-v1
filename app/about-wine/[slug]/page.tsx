@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import AddWineButton from "@/app/components/add-wine-button";
 import Footer from "@/app/components/footer";
 import Navbar from "@/app/components/navbar";
 import winesData from "@/app/data/products-wines.json";
@@ -82,12 +83,7 @@ export default async function WineDetailPage({
                             <p className="panel-text-in-2 mt-2 font-serif text-3xl text-[#1D1D1D]">{wine.region}</p>
                             <p className="panel-text-in-3 mt-8 max-w-[520px] text-lg leading-relaxed text-[#1D1D1D]">{wine.description}</p>
 
-                            <button
-                                type="button"
-                                className="panel-text-in-4 mt-10 h-12 w-full max-w-[320px] rounded-md bg-black text-xl font-semibold text-white transition-colors hover:bg-black/90"
-                            >
-                                Přidat
-                            </button>
+                            <AddWineButton wineName={wine.name} className="panel-text-in-4 mt-10 h-12 w-full max-w-[320px] rounded-md text-xl font-semibold" />
                         </div>
 
                         <div className="panel-text-in-3 self-center text-4xl leading-[1.35] text-[#1D1D1D] md:text-5xl">

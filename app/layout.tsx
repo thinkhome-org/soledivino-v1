@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Jost, Literata } from "next/font/google";
+import { WineSelectionProvider } from "./lib/wine-selection";
 import "./globals.css";
 import "./panel-animations.css";
 
@@ -28,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${jost.variable} ${literata.variable} antialiased`}
       >
-        {children}
+        <WineSelectionProvider>{children}</WineSelectionProvider>
       </body>
     </html>
   );

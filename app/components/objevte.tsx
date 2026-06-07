@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ButtonLink } from "./button";
 
 export default function Objevte() {
     return (
@@ -14,23 +14,22 @@ export default function Objevte() {
                 priority
             />
 
-            {/* Golden side mask with long sweeping curve */}
-            <div className="hidden md:block absolute -top-[50%] -left-[25%] h-[190%] w-[72%] rounded-full bg-[#A88D47]" />
+            <div
+                aria-hidden
+                className="absolute inset-0 hidden bg-[#A88D47] section-slash-gold md:block"
+            />
 
             {/* Centered text content */}
-            <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center gap-6 items-center">
+            <div className="absolute top-0 left-0 z-10 flex h-full w-full flex-col items-center justify-center gap-6">
                 <h2 className="text-5xl md:text-7xl font-bold text-white font-serif">
                     Objevte vína podle regionu
                 </h2>
                 <h3 className="text-xl md:text-3xl text-white font-serif">
                     Prozkoumejte jedinečné lokace našich vín interaktivní formou
                 </h3>
-                <Link
-                    href="objevte"
-                    className="text-white font-bold transition-colors font-sans bg-[#A18136] px-10 py-4 rounded-xl mt-6"
-                >
+                <ButtonLink href="/mapa" variant="gold" className="mt-6">
                     Objevte
-                </Link>
+                </ButtonLink>
             </div>
         </section>
     );

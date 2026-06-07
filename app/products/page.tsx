@@ -1,16 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { Button } from "../components/button";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import winesData from "../data/products-wines.json";
-import { toWineSlug } from "../lib/wine-slug";
+import { findWineBySlug, toWineSlug } from "../lib/wine-slug";
+import { toRegionSlug } from "../lib/regions";
 
 type ProductWine = {
     name: string;
     region: string;
+    regione: string;
     color: string;
     image: string;
     description: string;
@@ -27,11 +31,29 @@ function chunkWines(items: ProductWine[], size: number) {
     return rows;
 }
 
-export default function ProductsPage() {
+function ProductsPageContent() {
     const router = useRouter();
-    const rows = chunkWines(wines, WINES_PER_ROW);
+    const searchParams = useSearchParams();
+    const regionSlug = searchParams.get("region");
+    const visibleWines = regionSlug
+        ? wines.filter((wine) => toRegionSlug(wine.regione) === regionSlug)
+        : wines;
+    const rows = chunkWines(visibleWines, WINES_PER_ROW);
+    const regionLabel = regionSlug ? visibleWines[0]?.regione ?? regionSlug : null;
     const [selectedWine, setSelectedWine] = useState<ProductWine | null>(null);
     const [isTransitioning, setIsTransitioning] = useState(false);
+
+    useEffect(() => {
+        const wineSlug = searchParams.get("wine");
+        if (!wineSlug) {
+            return;
+        }
+
+        const wine = findWineBySlug(wines, wineSlug);
+        if (wine) {
+            setSelectedWine(wine);
+        }
+    }, [searchParams]);
 
     const handleMoreClick = () => {
         if (!selectedWine || isTransitioning) {
@@ -73,29 +95,57 @@ export default function ProductsPage() {
                                     <h2 className="panel-text-in-1 text-[46px] leading-[0.95] text-[#1D1D1D] font-serif">{selectedWine.name}</h2>
                                     <p className="panel-text-in-2 mt-1 text-[36px] leading-none text-[#1D1D1D] font-serif">{selectedWine.region}</p>
                                     <p className="panel-text-in-3 mx-auto mt-8 max-w-[250px] text-sm leading-relaxed text-[#1D1D1D]">{selectedWine.description}</p>
-                                    <button
+                                    <Button
                                         type="button"
                                         onClick={handleMoreClick}
                                         disabled={isTransitioning}
-                                        className="panel-text-in-4 mt-8 flex h-11 w-full items-center justify-center rounded-md bg-black text-xl font-semibold text-white transition-colors hover:bg-black/90"
+                                        className="panel-text-in-4 mt-8 w-full"
                                     >
                                         Více
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         )}
                     </aside>
 
                     <section className="mx-auto w-full max-w-7xl px-6 py-8 md:px-12 md:py-10">
-                        {rows.map((row, rowIndex) => (
+                        {regionSlug && (
+                            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-black/10 pb-4">
+                                <p className="text-[24px] leading-none text-[#1D1D1D] font-serif">
+                                    Region: {regionLabel}
+                                </p>
+                                <Link
+                                    href="/products"
+                                    className="text-sm text-[#1D1D1D] underline-offset-4 transition-colors hover:text-[#8B2D3D] hover:underline"
+                                >
+                                    Zobrazit všechna vína
+                                </Link>
+                            </div>
+                        )}
+
+                        {visibleWines.length === 0 ? (
+                            <p className="py-16 text-center text-[#1D1D1D]/70">
+                                Pro tento region zatím nemáme žádná vína.
+                            </p>
+                        ) : null}
+
+                        {rows.map((row, rowIndex) => {
+                            const rowGridClass =
+                                row.length === 1
+                                    ? "md:grid-cols-1"
+                                    : row.length === 2
+                                      ? "md:grid-cols-2"
+                                      : "md:grid-cols-3";
+
+                            return (
                             <div key={`row-${rowIndex}`}>
-                                <div className="flex mt-2 h-[10px] w-full overflow-hidden">
+                                <div className={`mt-2 grid h-[10px] grid-cols-1 gap-0 ${rowGridClass}`}>
                                     {row.map((wine) => (
-                                        <div key={`${wine.name}-${rowIndex}-color`} className="h-full flex-1" style={{ backgroundColor: wine.color }} />
+                                        <div key={`${wine.name}-${rowIndex}-color`} className="h-full" style={{ backgroundColor: wine.color }} />
                                     ))}
                                 </div>
 
-                                <div className="grid grid-cols-1 gap-0 md:grid-cols-3">
+                                <div className={`grid grid-cols-1 gap-0 ${rowGridClass}`}>
                                     {row.map((wine) => (
                                         <button
                                             key={`${wine.name}-${rowIndex}`}
@@ -120,12 +170,21 @@ export default function ProductsPage() {
                                     ))}
                                 </div>
                             </div>
-                        ))}
+                            );
+                        })}
                     </section>
                 </div>
             </main>
 
             <Footer />
         </div>
+    );
+}
+
+export default function ProductsPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#EFEFEF]" />}>
+            <ProductsPageContent />
+        </Suspense>
     );
 }

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Barolo Bussia",
+    "description": "Robustní a harmonické Barolo s jasnou minerálností a hlubokými tóny červeného ovoce. Jemné třísloviny a dlouhý, vyvážený dochuť potvrzují jeho původ z prestižní oblasti Bussia.",
+    "image": "/placeholder-wine.png"
+  },
+  {
+    "name": "Amarone",
+    "description": "Plné červené víno s bohatou strukturou, tóny sušeného ovoce a kakaa. Díky tradiční metodě appassimento nabízí výrazný charakter i sametový závěr.",
+    "image": "/placeholder-wine.png"
+  },
+  {
+    "name": "Costadoro Marche Rosso",
+    "description": "Elegantní cuvee z regionu Marche s jemnou ovocností a svěží kyselinou. Univerzální víno pro každodenní párování i slavnostní večeři.",
+    "image": "/placeholder-wine.png"
+  }
+]

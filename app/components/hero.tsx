@@ -1,24 +1,32 @@
 import Image from "next/image";
-import Button from "next/link";
-import Link from "next/link";
+import { ButtonLink } from "./button";
 
 export default function Hero() {
     return (
-        <div className="w-full justify-center items-center">
-            <Image src="/hero.png" alt="Hero" width={1920} height={1080} className="w-full h-auto object-cover" priority />
-            <div className="absolute -top-10 left-0 w-full h-full flex flex-col justify-center gap-20 items-center">
-                <h1 className="text-7xl text-center font-bold text-black font-serif">
-                    Ochutnejte slunce <br /> v každém doušku
-                </h1>
-                <div className="flex flex-row gap-4">
-                    <Link href="/nase-vina" className="text-white  transition-colors font-sans bg-black px-8 py-4 rounded-xl">
-                        Naše vína
-                    </Link>
-                    <Link href="/o-nas" className="text-white  transition-colors font-sans bg-[#A18136] px-8 py-4 rounded-xl">
-                        O nás
-                    </Link>
+        <section className="relative w-full">
+            <div className="relative aspect-[4096/1600] w-full min-h-[420px] sm:min-h-[520px] lg:min-h-[620px]">
+                <Image
+                    src="/hero.png"
+                    alt=""
+                    fill
+                    priority
+                    className="object-cover object-center"
+                    sizes="100vw"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-14 px-6 sm:gap-16 md:gap-20">
+                    <h1 className="text-center font-serif text-4xl font-normal leading-tight tracking-tight text-black sm:text-5xl md:text-6xl lg:text-7xl">
+                        Ochutnejte slunce
+                        <br />
+                        v každém doušku
+                    </h1>
+                    <div className="flex flex-row flex-wrap items-center justify-center gap-4">
+                        <ButtonLink href="/products">Naše vína</ButtonLink>
+                        <ButtonLink href="/" variant="gold">
+                            O nás
+                        </ButtonLink>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }
