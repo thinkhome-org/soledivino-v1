@@ -2,11 +2,17 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { put } from "@vercel/blob";
 
+function hasBlobStorage(): boolean {
+    return Boolean(process.env.BLOB_READ_WRITE_TOKEN ?? process.env.BLOB_STORE_ID);
+}
+
 export async function uploadImage(file: File): Promise<string> {
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
+    if (hasBlobStorage()) {
         const blob = await put(`wines/${Date.now()}-${file.name}`, file, {
             access: "public",
-            token: process.env.BLOB_READ_WRITE_TOKEN,
+            ...(process.env.BLOB_READ_WRITE_TOKEN
+                ? { token: process.env.BLOB_READ_WRITE_TOKEN }
+                : {}),
         });
 
         return blob.url;

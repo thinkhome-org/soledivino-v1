@@ -50,7 +50,7 @@ async function writeJson(key: string, value: unknown): Promise<void> {
     }
 
     throw new Error(
-        "Redis není nakonfigurován. Nastavte UPSTASH_REDIS_REST_URL a UPSTASH_REDIS_REST_TOKEN.",
+        "Redis není nakonfigurován. Připojte Upstash/KV úložiště ve Vercelu (KV_REST_API_URL + KV_REST_API_TOKEN).",
     );
 }
 
