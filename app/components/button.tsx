@@ -10,8 +10,8 @@ type Variant = keyof typeof variants;
 
 function buttonClassName(variant: Variant, className?: string) {
     return [
-        "inline-flex items-center justify-center rounded-2xl px-8 py-3.5 font-sans text-sm text-white transition-colors sm:px-10 sm:py-4 sm:text-base",
-        "disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex cursor-pointer items-center justify-center rounded-2xl px-8 py-3.5 font-sans text-sm text-white transition-colors sm:px-10 sm:py-4 sm:text-base",
+        "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         className,
     ]

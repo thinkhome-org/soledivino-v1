@@ -13,7 +13,7 @@ export default function Hero() {
                     className="object-cover object-center"
                     sizes="100vw"
                 />
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-14 px-6 sm:gap-16 md:gap-20">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-10 px-6 sm:gap-16 md:gap-20">
                     <h1 className="text-center font-serif text-4xl font-normal leading-tight tracking-tight text-black sm:text-5xl md:text-6xl lg:text-7xl">
                         Ochutnejte slunce
                         <br />

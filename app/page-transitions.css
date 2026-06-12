@@ -1,0 +1,37 @@
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background-color: #f4f1ea;
+  transform: translateX(-100%);
+  transition: none;
+}
+
+.page-curtain.is-active {
+  pointer-events: auto;
+}
+
+.page-curtain.is-covering,
+.page-curtain.is-revealing {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page-curtain.is-covered {
+  transform: translateX(0);
+}
+
+.page-curtain.is-covering {
+  transform: translateX(0);
+}
+
+.page-curtain.is-revealing {
+  transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-curtain.is-covering,
+  .page-curtain.is-revealing {
+    transition: none;
+  }
+}

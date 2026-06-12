@@ -7,6 +7,9 @@ export function toWineSlug(name: string): string {
         .replace(/^-+|-+$/g, "");
 }
 
-export function findWineBySlug<T extends { name: string }>(wines: T[], slug: string): T | undefined {
-    return wines.find((wine) => toWineSlug(wine.name) === slug);
+export function findWineBySlug<T extends { name: string; slug?: string }>(
+    wines: T[],
+    slug: string,
+): T | undefined {
+    return wines.find((wine) => wine.slug === slug || toWineSlug(wine.name) === slug);
 }

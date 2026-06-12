@@ -1,17 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import winesData from "../data/nas-vyber-wines.json";
-import { toWineSlug } from "../lib/wine-slug";
+import type { FeaturedItem } from "../lib/content-types";
 
-type WineCard = {
-    name: string;
-    description: string;
-    image: string;
+type NasVyberProps = {
+    items: FeaturedItem[];
 };
 
-const wines: WineCard[] = winesData;
-
-export default function NasVyber() {
+export default function NasVyber({ items }: NasVyberProps) {
     return (
         <section className="w-full bg-white py-16 md:py-24">
             <div className="max-w-7xl mx-auto px-6">
@@ -20,10 +15,10 @@ export default function NasVyber() {
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
-                    {wines.map((wine) => (
+                    {items.map((wine) => (
                         <Link
-                            key={wine.name}
-                            href={`/products?wine=${toWineSlug(wine.name)}`}
+                            key={wine.id}
+                            href={`/products?wine=${wine.productSlug}`}
                             className="group flex flex-col items-center text-center transition-opacity hover:opacity-80"
                         >
                             <div className="relative mb-6 h-64 w-40">

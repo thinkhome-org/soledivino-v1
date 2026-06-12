@@ -1,9 +1,24 @@
 @import "tailwindcss";
 
+@variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@variant group-hover {
+  @media (hover: hover) and (pointer: fine) {
+    :is(.group):hover & {
+      @slot;
+    }
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --section-divider: 44%;
 }
 
 @theme inline {
@@ -27,20 +42,14 @@ body {
   font-family: var(--font-jost), sans-serif;
 }
 
-.section-slash-white {
-  clip-path: polygon(
-    var(--section-divider) 0,
-    100% 0,
-    100% 100%,
-    var(--section-divider) 100%
-  );
+a[href],
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[role="link"] {
+  cursor: pointer;
 }
 
-.section-slash-gold {
-  clip-path: polygon(
-    0 0,
-    var(--section-divider) 0,
-    var(--section-divider) 100%,
-    0 100%
-  );
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
 }

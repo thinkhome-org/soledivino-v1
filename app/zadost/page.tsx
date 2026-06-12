@@ -1,4 +1,3 @@
-import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import ZadostForm from "../components/zadost-form";
 
@@ -11,8 +10,6 @@ export default function ZadostPage() {
                 <h1 className="mb-14 text-center font-serif text-5xl text-black md:text-6xl">Poptávka vín</h1>
                 <ZadostForm />
             </main>
-
-            <Footer />
         </div>
     );
 }

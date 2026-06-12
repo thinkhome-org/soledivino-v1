@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from "react";
 import { toWineSlug } from "./wine-slug";
 
 export type SelectedWine = {
@@ -16,58 +16,97 @@ type WineSelectionContextValue = {
 };
 
 const STORAGE_KEY = "soledivino-selected-wines";
+const EMPTY_WINES: SelectedWine[] = [];
 
 const WineSelectionContext = createContext<WineSelectionContextValue | null>(null);
 
+const listeners = new Set<() => void>();
+
+let cachedRaw: string | null | undefined;
+let cachedSnapshot: SelectedWine[] = EMPTY_WINES;
+
+function invalidateCache() {
+    cachedRaw = undefined;
+}
+
+function emitChange() {
+    for (const listener of listeners) {
+        listener();
+    }
+}
+
+function subscribe(listener: () => void) {
+    listeners.add(listener);
+
+    const handleStorage = (event: StorageEvent) => {
+        if (event.key === STORAGE_KEY) {
+            invalidateCache();
+            listener();
+        }
+    };
+
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+        listeners.delete(listener);
+        window.removeEventListener("storage", handleStorage);
+    };
+}
+
 function readStoredWines(): SelectedWine[] {
     if (typeof window === "undefined") {
-        return [];
+        return EMPTY_WINES;
     }
 
     try {
         const raw = window.localStorage.getItem(STORAGE_KEY);
+
+        if (raw === cachedRaw) {
+            return cachedSnapshot;
+        }
+
+        cachedRaw = raw;
+
         if (!raw) {
-            return [];
+            cachedSnapshot = EMPTY_WINES;
+            return cachedSnapshot;
         }
 
         const parsed = JSON.parse(raw) as SelectedWine[];
-        return Array.isArray(parsed) ? parsed : [];
+        cachedSnapshot = Array.isArray(parsed) ? parsed : EMPTY_WINES;
+        return cachedSnapshot;
     } catch {
-        return [];
+        cachedRaw = null;
+        cachedSnapshot = EMPTY_WINES;
+        return cachedSnapshot;
     }
 }
 
+function writeStoredWines(wines: SelectedWine[]) {
+    const serialized = JSON.stringify(wines);
+    window.localStorage.setItem(STORAGE_KEY, serialized);
+    cachedRaw = serialized;
+    cachedSnapshot = wines;
+    emitChange();
+}
+
 export function WineSelectionProvider({ children }: { children: React.ReactNode }) {
-    const [selectedWines, setSelectedWines] = useState<SelectedWine[]>([]);
-    const [isHydrated, setIsHydrated] = useState(false);
-
-    useEffect(() => {
-        setSelectedWines(readStoredWines());
-        setIsHydrated(true);
-    }, []);
-
-    useEffect(() => {
-        if (!isHydrated) {
-            return;
-        }
-
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedWines));
-    }, [selectedWines, isHydrated]);
+    const selectedWines = useSyncExternalStore(subscribe, readStoredWines, () => EMPTY_WINES);
 
     const addWine = useCallback((name: string) => {
         const slug = toWineSlug(name);
+        const current = readStoredWines();
 
-        setSelectedWines((current) => {
-            if (current.some((wine) => wine.slug === slug)) {
-                return current;
-            }
+        if (current.some((wine) => wine.slug === slug)) {
+            return;
+        }
 
-            return [...current, { name, slug }];
-        });
+        writeStoredWines([...current, { name, slug }]);
     }, []);
 
     const removeWine = useCallback((slug: string) => {
-        setSelectedWines((current) => current.filter((wine) => wine.slug !== slug));
+        const current = readStoredWines();
+        writeStoredWines(current.filter((wine) => wine.slug !== slug));
     }, []);
 
     const isSelected = useCallback(

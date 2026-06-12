@@ -4,29 +4,32 @@
 // attribution appreciated): https://simplemaps.com/resources/svg-license
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { usePageTransition } from "./page-transition";
 import regionPaths from "../data/italy-regions-paths.json";
-import winesData from "../data/products-wines.json";
 import { SVG_ID_TO_REGION, toRegionSlug } from "../lib/regions";
 
 type RegionPath = { id: string; d: string };
 
 const paths: RegionPath[] = regionPaths;
 
-function wineCountsBySlug(): Record<string, number> {
-    const counts: Record<string, number> = {};
-    for (const wine of winesData as { regione: string }[]) {
-        const slug = toRegionSlug(wine.regione);
-        counts[slug] = (counts[slug] ?? 0) + 1;
-    }
-    return counts;
-}
+type ItalyMapProps = {
+    regionCounts: Record<string, number>;
+};
 
-export default function ItalyMap() {
-    const router = useRouter();
-    const counts = useMemo(() => wineCountsBySlug(), []);
+export default function ItalyMap({ regionCounts }: ItalyMapProps) {
+    const { navigate } = usePageTransition();
+    const counts = useMemo(() => regionCounts, [regionCounts]);
     const [hovered, setHovered] = useState<string | null>(null);
+    const [canHover, setCanHover] = useState(false);
+
+    useEffect(() => {
+        const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+        const update = () => setCanHover(media.matches);
+        update();
+        media.addEventListener("change", update);
+        return () => media.removeEventListener("change", update);
+    }, []);
 
     const activeRegions = useMemo(
         () =>
@@ -76,15 +79,23 @@ export default function ItalyMap() {
                             role="link"
                             tabIndex={0}
                             aria-label={`${name} (${count})`}
-                            onClick={() => router.push(`/products?region=${slug}`)}
+                            onClick={() => navigate(`/products?region=${slug}`)}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === " ") {
                                     e.preventDefault();
-                                    router.push(`/products?region=${slug}`);
+                                    navigate(`/products?region=${slug}`);
                                 }
                             }}
-                            onMouseEnter={() => setHovered(slug)}
-                            onMouseLeave={() => setHovered((s) => (s === slug ? null : s))}
+                            onMouseEnter={() => {
+                                if (canHover) {
+                                    setHovered(slug);
+                                }
+                            }}
+                            onMouseLeave={() => {
+                                if (canHover) {
+                                    setHovered((s) => (s === slug ? null : s));
+                                }
+                            }}
                             className="cursor-pointer stroke-white outline-none transition-colors duration-200 hover:fill-[#8B2D3D] focus-visible:fill-[#8B2D3D]"
                             style={{ fill: hovered === slug ? "#8B2D3D" : "#9B7E3E" }}
                             strokeWidth={1}
@@ -102,8 +113,16 @@ export default function ItalyMap() {
                         <li key={r.slug}>
                             <Link
                                 href={`/products?region=${r.slug}`}
-                                onMouseEnter={() => setHovered(r.slug)}
-                                onMouseLeave={() => setHovered((s) => (s === r.slug ? null : s))}
+                                onMouseEnter={() => {
+                                    if (canHover) {
+                                        setHovered(r.slug);
+                                    }
+                                }}
+                                onMouseLeave={() => {
+                                    if (canHover) {
+                                        setHovered((s) => (s === r.slug ? null : s));
+                                    }
+                                }}
                                 className="flex items-center justify-between gap-3 py-1 text-sm text-[#1D1D1D] transition-colors hover:text-[#8B2D3D]"
                             >
                                 <span>{r.name}</span>

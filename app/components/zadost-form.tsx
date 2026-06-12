@@ -21,6 +21,11 @@ const initialFormState: FormState = {
 const fieldClassName =
     "w-full rounded-xl border border-black bg-white px-4 py-3 font-sans text-base text-black outline-none transition-colors focus:border-black";
 
+const labelClassName =
+    "flex flex-col gap-1 sm:grid sm:grid-cols-[110px_minmax(0,1fr)] sm:items-center sm:gap-4";
+
+const labelTextClassName = "font-sans text-lg text-black sm:text-right";
+
 export default function ZadostForm() {
     const { selectedWines, removeWine } = useWineSelection();
     const [form, setForm] = useState<FormState>(initialFormState);
@@ -35,8 +40,8 @@ export default function ZadostForm() {
         <form onSubmit={handleSubmit} className="mx-auto w-full max-w-5xl">
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
                 <div className="space-y-5">
-                    <label className="grid grid-cols-[110px_minmax(0,1fr)] items-center gap-4">
-                        <span className="text-right font-sans text-lg text-black">Jméno</span>
+                    <label className={labelClassName}>
+                        <span className={labelTextClassName}>Jméno</span>
                         <input
                             type="text"
                             name="name"
@@ -47,8 +52,8 @@ export default function ZadostForm() {
                         />
                     </label>
 
-                    <label className="grid grid-cols-[110px_minmax(0,1fr)] items-center gap-4">
-                        <span className="text-right font-sans text-lg text-black">E-Mail</span>
+                    <label className={labelClassName}>
+                        <span className={labelTextClassName}>E-Mail</span>
                         <input
                             type="email"
                             name="email"
@@ -59,8 +64,8 @@ export default function ZadostForm() {
                         />
                     </label>
 
-                    <label className="grid grid-cols-[110px_minmax(0,1fr)] items-center gap-4">
-                        <span className="text-right font-sans text-lg text-black">Telefon</span>
+                    <label className={labelClassName}>
+                        <span className={labelTextClassName}>Telefon</span>
                         <input
                             type="tel"
                             name="phone"
@@ -71,8 +76,8 @@ export default function ZadostForm() {
                         />
                     </label>
 
-                    <label className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-4">
-                        <span className="pt-3 text-right font-sans text-lg text-black">Poznámka</span>
+                    <label className="flex flex-col gap-1 sm:grid sm:grid-cols-[110px_minmax(0,1fr)] sm:items-start sm:gap-4">
+                        <span className={`${labelTextClassName} sm:pt-3`}>Poznámka</span>
                         <textarea
                             name="note"
                             value={form.note}
