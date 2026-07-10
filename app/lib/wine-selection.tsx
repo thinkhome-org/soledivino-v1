@@ -12,6 +12,7 @@ type WineSelectionContextValue = {
     selectedWines: SelectedWine[];
     addWine: (name: string) => void;
     removeWine: (slug: string) => void;
+    clearWines: () => void;
     isSelected: (name: string) => boolean;
 };
 
@@ -109,6 +110,10 @@ export function WineSelectionProvider({ children }: { children: React.ReactNode 
         writeStoredWines(current.filter((wine) => wine.slug !== slug));
     }, []);
 
+    const clearWines = useCallback(() => {
+        writeStoredWines([]);
+    }, []);
+
     const isSelected = useCallback(
         (name: string) => selectedWines.some((wine) => wine.slug === toWineSlug(name)),
         [selectedWines],
@@ -119,9 +124,10 @@ export function WineSelectionProvider({ children }: { children: React.ReactNode 
             selectedWines,
             addWine,
             removeWine,
+            clearWines,
             isSelected,
         }),
-        [selectedWines, addWine, removeWine, isSelected],
+        [selectedWines, addWine, removeWine, clearWines, isSelected],
     );
 
     return <WineSelectionContext.Provider value={value}>{children}</WineSelectionContext.Provider>;

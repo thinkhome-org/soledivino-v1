@@ -1,11 +1,12 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
-import type { CarouselItem, Contact, FeaturedItem, Product } from "./content-types";
+import type { CarouselItem, Contact, FeaturedItem, InquirySettings, Product } from "./content-types";
 import {
     writeCarousel,
     writeContact,
     writeFeatured,
+    writeInquirySettings,
     writeProducts,
 } from "./content";
 
@@ -30,5 +31,10 @@ export async function saveFeatured(items: FeaturedItem[]) {
 
 export async function saveContact(contact: Contact) {
     await writeContact(contact);
+    revalidateContent();
+}
+
+export async function saveInquirySettings(settings: InquirySettings) {
+    await writeInquirySettings(settings);
     revalidateContent();
 }

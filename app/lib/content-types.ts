@@ -40,6 +40,14 @@ export type Contact = {
     ico: string;
 };
 
+export type InquirySettings = {
+    enabled: boolean;
+    recipientEmail: string;
+    subject: string;
+    successMessage: string;
+    disabledMessage: string;
+};
+
 export const WINE_TYPE_LABELS: Record<WineType, string> = {
     red: "Červené víno",
     white: "Bílé víno",

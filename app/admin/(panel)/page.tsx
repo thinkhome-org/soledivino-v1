@@ -16,6 +16,11 @@ const sections = [
         title: "Kontakt",
         description: "Kontaktní údaje zobrazené na stránce Kontakty.",
     },
+    {
+        href: "/admin/poptavka",
+        title: "Poptávka",
+        description: "Nastavení formuláře poptávky vín a doručení e-mailů.",
+    },
 ];
 
 export default function AdminDashboardPage() {

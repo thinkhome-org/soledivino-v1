@@ -2,7 +2,8 @@ import productsJson from "@/app/data/products-wines.json";
 import winesJson from "@/app/data/wines.json";
 import featuredJson from "@/app/data/nas-vyber-wines.json";
 import contactJson from "@/app/data/contact.json";
-import type { CarouselItem, Contact, FeaturedItem, Product, WineType } from "./content-types";
+import inquirySettingsJson from "@/app/data/inquiry-settings.json";
+import type { CarouselItem, Contact, FeaturedItem, InquirySettings, Product, WineType } from "./content-types";
 import { toWineSlug } from "./wine-slug";
 
 type LegacyProduct = {
@@ -92,6 +93,10 @@ export function defaultFeatured(): FeaturedItem[] {
 
 export function defaultContact(): Contact {
     return contactJson as Contact;
+}
+
+export function defaultInquirySettings(): InquirySettings {
+    return inquirySettingsJson as InquirySettings;
 }
 
 export function newId(): string {

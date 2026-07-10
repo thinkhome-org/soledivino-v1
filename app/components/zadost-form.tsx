@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "./button";
 import { useWineSelection } from "../lib/wine-selection";
+import { submitInquiryAction, type InquiryFormState } from "../zadost/actions";
 
 type FormState = {
     name: string;
@@ -18,6 +19,8 @@ const initialFormState: FormState = {
     note: "",
 };
 
+const initialActionState: InquiryFormState = {};
+
 const fieldClassName =
     "w-full rounded-xl border border-black bg-white px-4 py-3 font-sans text-base text-black outline-none transition-colors focus:border-black";
 
@@ -26,18 +29,44 @@ const labelClassName =
 
 const labelTextClassName = "font-sans text-lg text-black sm:text-right";
 
-export default function ZadostForm() {
-    const { selectedWines, removeWine } = useWineSelection();
-    const [form, setForm] = useState<FormState>(initialFormState);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+type ZadostFormProps = {
+    enabled: boolean;
+    disabledMessage: string;
+};
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setIsSubmitted(true);
-    };
+export default function ZadostForm({ enabled, disabledMessage }: ZadostFormProps) {
+    const { selectedWines, removeWine, clearWines } = useWineSelection();
+    const [form, setForm] = useState<FormState>(initialFormState);
+    const [state, formAction, pending] = useActionState(submitInquiryAction, initialActionState);
+
+    useEffect(() => {
+        if (!state.success) {
+            return;
+        }
+
+        setForm(initialFormState);
+        clearWines();
+    }, [state.success, clearWines]);
+
+    if (!enabled) {
+        return (
+            <div className="mx-auto w-full max-w-5xl rounded-xl border border-black/15 bg-black/[0.02] px-6 py-10 text-center">
+                <p className="font-sans text-base text-black/70">{disabledMessage}</p>
+            </div>
+        );
+    }
 
     return (
-        <form onSubmit={handleSubmit} className="mx-auto w-full max-w-5xl">
+        <form action={formAction} className="mx-auto w-full max-w-5xl">
+            <input type="hidden" name="wines" value={JSON.stringify(selectedWines)} />
+
+            <div className="absolute -left-[9999px]" aria-hidden>
+                <label>
+                    Website
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                </label>
+            </div>
+
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
                 <div className="space-y-5">
                     <label className={labelClassName}>
@@ -49,6 +78,7 @@ export default function ZadostForm() {
                             onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
                             className={fieldClassName}
                             autoComplete="name"
+                            required
                         />
                     </label>
 
@@ -61,6 +91,7 @@ export default function ZadostForm() {
                             onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
                             className={fieldClassName}
                             autoComplete="email"
+                            required
                         />
                     </label>
 
@@ -115,15 +146,21 @@ export default function ZadostForm() {
                 </aside>
             </div>
 
-            <Button type="submit" className="mt-10 w-full rounded-xl py-5 text-lg">
-                Odeslat poptávku
-            </Button>
-
-            {isSubmitted && (
-                <p className="mt-4 text-center font-sans text-sm text-black/70" role="status">
-                    Děkujeme, vaše poptávka byla odeslána.
+            {state.error ? (
+                <p className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-center font-sans text-sm text-red-700" role="alert">
+                    {state.error}
                 </p>
-            )}
+            ) : null}
+
+            {state.success ? (
+                <p className="mt-6 text-center font-sans text-sm text-black/70" role="status">
+                    {state.success}
+                </p>
+            ) : null}
+
+            <Button type="submit" disabled={pending} className="mt-10 w-full rounded-xl py-5 text-lg">
+                {pending ? "Odesílám…" : "Odeslat poptávku"}
+            </Button>
         </form>
     );
 }

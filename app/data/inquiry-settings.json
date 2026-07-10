@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "recipientEmail": "info@soledivino.cz",
+  "subject": "Nová poptávka vín — Soledivino",
+  "successMessage": "Děkujeme, vaše poptávka byla odeslána.",
+  "disabledMessage": "Odesílání poptávek je dočasně vypnuto."
+}

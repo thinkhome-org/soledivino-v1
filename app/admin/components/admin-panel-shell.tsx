@@ -9,6 +9,7 @@ const navItems = [
     { href: "/admin/vina", label: "Vína" },
     { href: "/admin/domovska-stranka", label: "Domovská stránka" },
     { href: "/admin/kontakt", label: "Kontakt" },
+    { href: "/admin/poptavka", label: "Poptávka" },
 ];
 
 function MenuIcon({ open }: { open: boolean }) {

@@ -3,9 +3,10 @@ import {
     defaultCarousel,
     defaultContact,
     defaultFeatured,
+    defaultInquirySettings,
     defaultProducts,
 } from "./content-migrate";
-import type { CarouselItem, Contact, FeaturedItem, Product } from "./content-types";
+import type { CarouselItem, Contact, FeaturedItem, InquirySettings, Product } from "./content-types";
 import { devRead, devWrite, isDevStorageEnabled } from "./dev-storage";
 import { getRedis } from "./redis";
 import { toRegionSlug } from "./regions";
@@ -16,6 +17,7 @@ const KEYS = {
     carousel: "content:carousel",
     featured: "content:featured",
     contact: "content:contact",
+    inquirySettings: "content:inquiry-settings",
 } as const;
 
 async function readJson<T>(key: string): Promise<T | null> {
@@ -74,6 +76,11 @@ async function fetchContact(): Promise<Contact> {
     return stored ?? defaultContact();
 }
 
+async function fetchInquirySettings(): Promise<InquirySettings> {
+    const stored = await readJson<InquirySettings>(KEYS.inquirySettings);
+    return stored ?? defaultInquirySettings();
+}
+
 export const getProducts = unstable_cache(fetchProducts, ["content-products"], {
     tags: ["content"],
 });
@@ -87,6 +94,10 @@ export const getFeatured = unstable_cache(fetchFeatured, ["content-featured"], {
 });
 
 export const getContact = unstable_cache(fetchContact, ["content-contact"], {
+    tags: ["content"],
+});
+
+export const getInquirySettings = unstable_cache(fetchInquirySettings, ["content-inquiry-settings"], {
     tags: ["content"],
 });
 
@@ -106,6 +117,10 @@ export async function getContactRaw(): Promise<Contact> {
     return fetchContact();
 }
 
+export async function getInquirySettingsRaw(): Promise<InquirySettings> {
+    return fetchInquirySettings();
+}
+
 export async function writeProducts(products: Product[]): Promise<void> {
     await writeJson(KEYS.products, products);
 }
@@ -120,6 +135,10 @@ export async function writeFeatured(items: FeaturedItem[]): Promise<void> {
 
 export async function writeContact(contact: Contact): Promise<void> {
     await writeJson(KEYS.contact, contact);
+}
+
+export async function writeInquirySettings(settings: InquirySettings): Promise<void> {
+    await writeJson(KEYS.inquirySettings, settings);
 }
 
 export function productById(products: Product[], id: string): Product | undefined {
