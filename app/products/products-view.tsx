@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { AddWineIconButton } from "../components/add-wine-button";
 import { Button } from "../components/button";
 import Navbar from "../components/navbar";
@@ -39,6 +39,19 @@ function ProductsPageContent({
     const regionLabel = regionSlug ? visibleWines[0]?.regione ?? regionSlug : null;
     const [selectedWine, setSelectedWine] = useState<Product | null>(initialWine);
 
+    useEffect(() => {
+        if (!selectedWine || window.matchMedia("(min-width: 768px)").matches) {
+            return;
+        }
+
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [selectedWine]);
+
     const handleMoreClick = () => {
         if (!selectedWine) {
             return;
@@ -56,12 +69,38 @@ function ProductsPageContent({
                     className="relative z-10 grid grid-cols-1 md:transition-all md:duration-500 md:grid-cols-[0_minmax(0,1fr)] md:data-[open=true]:grid-cols-[380px_minmax(0,1fr)]"
                     data-open={selectedWine ? "true" : "false"}
                 >
-                    <aside className="border-r border-black/10 bg-white md:sticky md:top-16 md:self-start md:h-[calc(100vh-4rem)] md:overflow-y-auto">
+                    {selectedWine ? (
+                        <button
+                            type="button"
+                            className="wine-sheet-backdrop-in fixed inset-0 z-40 bg-black/40 md:hidden"
+                            aria-label="Zavřít detail vína"
+                            onClick={() => setSelectedWine(null)}
+                        />
+                    ) : null}
+
+                    <aside
+                        className={`border-r border-black/10 bg-white md:sticky md:top-16 md:z-auto md:self-start md:h-[calc(100vh-4rem)] md:overflow-y-auto ${
+                            selectedWine
+                                ? "wine-sheet-in fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto overscroll-contain rounded-t-2xl shadow-2xl md:static md:inset-auto md:max-h-none md:rounded-none md:shadow-none"
+                                : "hidden md:block"
+                        }`}
+                    >
                         {selectedWine && (
                             <div
                                 key={selectedWine.id}
-                                className="flex h-full min-h-0 flex-col"
+                                className="relative flex h-full min-h-0 flex-col"
                             >
+                                <button
+                                    type="button"
+                                    onClick={() => setSelectedWine(null)}
+                                    className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/5 text-[#1D1D1D] md:hidden"
+                                    aria-label="Zavřít"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-5 w-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                                        <path d="M6 6l12 12M18 6 6 18" />
+                                    </svg>
+                                </button>
+
                                 <div className="flex min-h-[280px] flex-1 items-center justify-center md:min-h-[380px] md:flex-1" style={{ backgroundColor: selectedWine.color }}>
                                     <div className="panel-image-in relative mx-auto h-[280px] w-full max-w-[320px] md:h-[320px] md:w-[320px]">
                                         <Image src={selectedWine.image} alt={selectedWine.name} fill className="object-contain" sizes="320px" priority />

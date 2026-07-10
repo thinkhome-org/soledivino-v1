@@ -126,10 +126,58 @@
   animation: map-tooltip-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes wine-sheet-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes wine-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.wine-sheet-backdrop-in {
+  animation: wine-sheet-backdrop-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.wine-sheet-in {
+  animation: wine-sheet-in 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .wine-sheet-in {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .map-tooltip-in {
     animation: none;
     opacity: 1;
     transform: translate(-50%, calc(-100% - 10px));
+  }
+
+  .wine-sheet-backdrop-in,
+  .wine-sheet-in {
+    animation: none;
+  }
+
+  .wine-sheet-backdrop-in {
+    opacity: 1;
+  }
+
+  .wine-sheet-in {
+    transform: translateY(0);
   }
 }
