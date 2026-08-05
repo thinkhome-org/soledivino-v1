@@ -9,6 +9,7 @@ import {
 import type { CarouselItem, Contact, FeaturedItem, InquirySettings, Product } from "./content-types";
 import { devRead, devWrite, isDevStorageEnabled } from "./dev-storage";
 import { getRedis } from "./redis";
+import type { CountryId } from "./regions";
 import { toRegionSlug } from "./regions";
 import { findWineBySlug } from "./wine-slug";
 
@@ -58,7 +59,11 @@ async function writeJson(key: string, value: unknown): Promise<void> {
 
 async function fetchProducts(): Promise<Product[]> {
     const stored = await readJson<Product[]>(KEYS.products);
-    return stored ?? defaultProducts();
+    const products = stored ?? defaultProducts();
+    return products.map((product) => ({
+        ...product,
+        country: product.country ?? "italy",
+    }));
 }
 
 async function fetchCarousel(): Promise<CarouselItem[]> {
@@ -149,11 +154,48 @@ export function productBySlug(products: Product[], slug: string): Product | unde
     return findWineBySlug(products, slug);
 }
 
+/** Flat counts by region slug (legacy / Italy-only helpers). */
 export function regionCounts(products: Product[]): Record<string, number> {
     const counts: Record<string, number> = {};
     for (const wine of products) {
         const slug = toRegionSlug(wine.regione);
         counts[slug] = (counts[slug] ?? 0) + 1;
     }
+    return counts;
+}
+
+/** Wine counts keyed by country, then region slug. */
+export function countryRegionCounts(
+    products: Product[],
+): Record<CountryId, Record<string, number>> {
+    const counts = {
+        italy: {},
+        germany: {},
+        austria: {},
+        france: {},
+    } as Record<CountryId, Record<string, number>>;
+
+    for (const wine of products) {
+        const country = wine.country ?? "italy";
+        const slug = toRegionSlug(wine.regione);
+        counts[country][slug] = (counts[country][slug] ?? 0) + 1;
+    }
+
+    return counts;
+}
+
+export function countryWineCounts(products: Product[]): Record<CountryId, number> {
+    const counts: Record<CountryId, number> = {
+        italy: 0,
+        germany: 0,
+        austria: 0,
+        france: 0,
+    };
+
+    for (const wine of products) {
+        const country = wine.country ?? "italy";
+        counts[country] += 1;
+    }
+
     return counts;
 }

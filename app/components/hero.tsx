@@ -21,8 +21,8 @@ export default function Hero() {
                     </h1>
                     <div className="flex flex-row flex-wrap items-center justify-center gap-4">
                         <ButtonLink href="/products">Naše vína</ButtonLink>
-                        <ButtonLink href="/" variant="gold">
-                            O nás
+                        <ButtonLink href="/mapa" variant="gold">
+                            Mapa
                         </ButtonLink>
                     </div>
                 </div>

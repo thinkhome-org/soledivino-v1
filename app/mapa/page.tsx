@@ -1,17 +1,21 @@
-import ItalyMap from "../components/italy-map";
+import WineMap from "../components/wine-map";
 import Navbar from "../components/navbar";
-import { getProducts, regionCounts } from "../lib/content";
+import { countryRegionCounts, countryWineCounts, getProducts } from "../lib/content";
 
 export default async function MapaPage() {
     const products = await getProducts();
-    const counts = regionCounts(products);
+    const regionCountsByCountry = countryRegionCounts(products);
+    const countryCounts = countryWineCounts(products);
 
     return (
-        <div className="min-h-screen bg-[#EFEFEF]">
+        <div className="flex min-h-screen flex-col bg-[#EFEFEF]">
             <Navbar />
 
-            <main className="mx-auto w-full max-w-7xl px-6 py-12 md:px-12 md:py-16">
-                <ItalyMap regionCounts={counts} />
+            <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 py-8 md:px-8 md:py-10">
+                <WineMap
+                    regionCountsByCountry={regionCountsByCountry}
+                    countryCounts={countryCounts}
+                />
             </main>
         </div>
     );

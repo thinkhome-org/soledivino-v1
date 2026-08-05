@@ -10,7 +10,13 @@ import Navbar from "../components/navbar";
 import { usePageTransition } from "../components/page-transition";
 import type { Product } from "../lib/content-types";
 import { findWineBySlug } from "../lib/wine-slug";
-import { toRegionSlug } from "../lib/regions";
+import {
+    COUNTRY_LABELS,
+    parseCountryId,
+    regionLabelForSlug,
+    toRegionSlug,
+} from "../lib/regions";
+import type { CountryId } from "../lib/regions";
 
 const WINES_PER_ROW = 3;
 
@@ -32,11 +38,29 @@ function ProductsPageContent({
     const { navigate } = usePageTransition();
     const searchParams = useSearchParams();
     const regionSlug = searchParams.get("region");
-    const visibleWines = regionSlug
-        ? products.filter((wine) => toRegionSlug(wine.regione) === regionSlug)
-        : products;
+    const countryParam = parseCountryId(searchParams.get("country"));
+    // Legacy ?region= without country → treat as Italy
+    const filterCountry: CountryId | null = regionSlug
+        ? (countryParam ?? "italy")
+        : null;
+
+    const visibleWines =
+        regionSlug && filterCountry
+            ? products.filter(
+                  (wine) =>
+                      (wine.country ?? "italy") === filterCountry &&
+                      toRegionSlug(wine.regione) === regionSlug,
+              )
+            : products;
+
+    const regionLabel =
+        regionSlug && filterCountry
+            ? visibleWines[0]?.regione ??
+              regionLabelForSlug(filterCountry, regionSlug) ??
+              regionSlug
+            : null;
+    const countryLabel = filterCountry ? COUNTRY_LABELS[filterCountry] : null;
     const rows = chunkWines(visibleWines, WINES_PER_ROW);
-    const regionLabel = regionSlug ? visibleWines[0]?.regione ?? regionSlug : null;
     const [selectedWine, setSelectedWine] = useState<Product | null>(initialWine);
 
     useEffect(() => {
@@ -133,7 +157,10 @@ function ProductsPageContent({
                         {regionSlug && (
                             <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-black/10 pb-4">
                                 <p className="font-serif text-xl leading-none text-[#1D1D1D] md:text-[24px]">
-                                    Region: {regionLabel}
+                                    {regionLabel}
+                                    {countryLabel ? (
+                                        <span className="text-[#1D1D1D]/45"> · {countryLabel}</span>
+                                    ) : null}
                                 </p>
                                 <Link
                                     href="/products"
