@@ -12,6 +12,7 @@ import type {
 import { newId } from "@/app/lib/content-migrate";
 import { getProductsRaw } from "@/app/lib/content";
 import { COUNTRY_DEFINITIONS, isCountryId } from "@/app/lib/regions";
+import { parseWineImportPayload } from "@/app/lib/wine-import";
 import { toWineSlug } from "@/app/lib/wine-slug";
 
 export type WineFormState = {
@@ -140,4 +141,52 @@ export async function deleteWineAction(id: string) {
     const updated = products.filter((product) => product.id !== id);
     await saveProducts(updated);
     redirect("/admin/vina");
+}
+
+export type WineImportState = {
+    error?: string;
+    success?: string;
+    imported?: number;
+    skipped?: { index: number; name?: string; message: string }[];
+    failed?: { index: number; name?: string; message: string }[];
+};
+
+export async function importWinesAction(
+    _prevState: WineImportState,
+    formData: FormData,
+): Promise<WineImportState> {
+    const raw = String(formData.get("json") ?? "");
+    const products = await getProductsRaw();
+    const parsed = parseWineImportPayload(raw, products);
+
+    if (!parsed.ok) {
+        return { error: parsed.error };
+    }
+
+    if (parsed.wines.length === 0) {
+        return {
+            error: "Nepodařilo se importovat žádné víno.",
+            skipped: parsed.skipped,
+            failed: parsed.failed,
+        };
+    }
+
+    await saveProducts([...products, ...parsed.wines]);
+
+    const count = parsed.wines.length;
+    const countLabel =
+        count === 1 ? "1 víno" : count >= 2 && count <= 4 ? `${count} vína` : `${count} vín`;
+    const skippedCount = parsed.skipped.length;
+    const failedCount = parsed.failed.length;
+    const extra =
+        skippedCount || failedCount
+            ? ` Přeskočeno ${skippedCount}, s chybami ${failedCount}.`
+            : "";
+
+    return {
+        success: `Importováno ${countLabel}.${extra}`,
+        imported: count,
+        skipped: parsed.skipped,
+        failed: parsed.failed,
+    };
 }

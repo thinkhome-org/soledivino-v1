@@ -16,7 +16,17 @@ export default async function AdminWinesPage() {
                     <h1 className="font-serif text-2xl text-black md:text-4xl">Vína</h1>
                     <p className="mt-2 font-sans text-black/60">Správa katalogu produktů.</p>
                 </div>
-                <ButtonLink href="/admin/vina/nove" className="w-full sm:w-auto">Přidat víno</ButtonLink>
+                <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                    <Link
+                        href="/admin/vina/import"
+                        className="inline-flex items-center justify-center rounded-2xl border border-black/15 px-8 py-3.5 font-sans text-sm text-black transition-colors hover:bg-black/5 sm:px-10 sm:py-4 sm:text-base"
+                    >
+                        Importovat JSON
+                    </Link>
+                    <ButtonLink href="/admin/vina/nove" className="w-full sm:w-auto">
+                        Přidat víno
+                    </ButtonLink>
+                </div>
             </div>
 
             {/* Mobile cards */}
