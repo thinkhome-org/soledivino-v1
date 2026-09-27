@@ -1,13 +1,21 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
-import type { CarouselItem, Contact, FeaturedItem, InquirySettings, Product } from "./content-types";
+import { revalidatePath, revalidateTag } from "next/cache";
+import type {
+    CarouselItem,
+    Contact,
+    FeaturedItem,
+    InquirySettings,
+    Product,
+    Winery,
+} from "./content-types";
 import {
     writeCarousel,
     writeContact,
     writeFeatured,
     writeInquirySettings,
     writeProducts,
+    writeWineries,
 } from "./content";
 
 function revalidateContent() {
@@ -37,4 +45,11 @@ export async function saveContact(contact: Contact) {
 export async function saveInquirySettings(settings: InquirySettings) {
     await writeInquirySettings(settings);
     revalidateContent();
+}
+
+export async function saveWineries(wineries: Winery[]) {
+    await writeWineries(wineries);
+    revalidateContent();
+    revalidatePath("/vinarstvi");
+    revalidatePath("/vinarstvi/[slug]", "page");
 }

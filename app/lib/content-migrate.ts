@@ -3,6 +3,7 @@ import winesJson from "@/app/data/wines.json";
 import featuredJson from "@/app/data/nas-vyber-wines.json";
 import contactJson from "@/app/data/contact.json";
 import inquirySettingsJson from "@/app/data/inquiry-settings.json";
+import wineriesJson from "@/app/data/wineries.json";
 import type {
     CarouselItem,
     Contact,
@@ -12,6 +13,7 @@ import type {
     Product,
     ProductionStyle,
     WineType,
+    Winery,
 } from "./content-types";
 import { toWineSlug } from "./wine-slug";
 
@@ -210,6 +212,14 @@ export function defaultContact(): Contact {
 
 export function defaultInquirySettings(): InquirySettings {
     return inquirySettingsJson as InquirySettings;
+}
+
+export function defaultWineries(): Winery[] {
+    return (wineriesJson as Winery[]).map((winery) => ({
+        ...winery,
+        logo: winery.logo || undefined,
+        wineSlugs: winery.wineSlugs ?? [],
+    }));
 }
 
 export function newId(): string {

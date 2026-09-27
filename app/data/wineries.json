@@ -1,0 +1,62 @@
+[
+  {
+    "id": "winery-antinori",
+    "slug": "antinori",
+    "name": "Antinori",
+    "country": "Itálie",
+    "description": "Marchesi Antinori patří k nejstarším rodinným vinařstvím na světě. Sídlo má v Toskánsku a rodina se výrobě vína věnuje už více než šest století. Dnes spojuje historii s moderním přístupem k vinici i ke sklepu.",
+    "tileImage": "/hero.png",
+    "heroImage": "/main-objevte.jpg",
+    "wineSlugs": ["barolo-bussia", "amarone", "costadoro-marche-rosso"]
+  },
+  {
+    "id": "winery-zenato",
+    "slug": "zenato",
+    "name": "Zenato",
+    "country": "Itálie",
+    "description": "Rodinné vinařství ze břehů jezera Garda. Zenato je známé především díky Luganě a plným červeným vínům z Valpolicelly, která spojují tradici s pečlivou prací ve vinici.",
+    "tileImage": "/main-objevte.jpg",
+    "heroImage": "/hero.png",
+    "wineSlugs": ["soave-classico", "valpolicella-ripasso", "lugana"]
+  },
+  {
+    "id": "winery-allegrini",
+    "slug": "allegrini",
+    "name": "Allegrini",
+    "country": "Itálie",
+    "description": "Allegrini je jedním z nejvýraznějších jmen Valpolicelly. Vína staví na autoktonních odrůdách a práci s terroirem — od klasického Valpolicella po koncentrované Amarone.",
+    "tileImage": "/hero.png",
+    "heroImage": "/main-objevte.jpg",
+    "wineSlugs": ["chianti-classico", "brunello-di-montalcino", "etna-rosso"]
+  },
+  {
+    "id": "winery-gaja",
+    "slug": "gaja",
+    "name": "Gaja",
+    "country": "Itálie",
+    "description": "Piemontské vinařství z Barbaresca. Gaja spojuje precizní práci ve vinici s dlouhým zráním a jasným, noblesním stylem červených vín.",
+    "tileImage": "/main-objevte.jpg",
+    "heroImage": "/hero.png",
+    "wineSlugs": ["montepulciano-dabruzzo", "primitivo-di-manduria", "lambrusco-grasparossa"]
+  },
+  {
+    "id": "winery-planeta",
+    "slug": "planeta",
+    "name": "Planeta",
+    "country": "Itálie",
+    "description": "Sicilská rodina s vinicemi od Etny po Vittorii. Planeta ukazuje ostrov v několika výrazech — od vulkanického červeného po svěží středomořská bílá vína.",
+    "tileImage": "/hero.png",
+    "heroImage": "/main-objevte.jpg",
+    "wineSlugs": ["nero-davola", "etna-rosso", "rosato-di-puglia"]
+  },
+  {
+    "id": "winery-feudi-di-san-gregorio",
+    "slug": "feudi-di-san-gregorio",
+    "name": "Feudi di San Gregorio",
+    "country": "Itálie",
+    "description": "Vinařství z Irpinie, které vrátilo pozornost k autoktonním odrůdám Kampánie. Greco, Falanghina a Aglianico tady mluví o vulkanické půdě a horském klimatu.",
+    "tileImage": "/main-objevte.jpg",
+    "heroImage": "/hero.png",
+    "wineSlugs": ["greco-di-tufo", "falanghina", "cannonau"]
+  }
+]

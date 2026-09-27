@@ -7,6 +7,7 @@ import { logoutAction } from "../actions";
 const navItems = [
     { href: "/admin", label: "Přehled" },
     { href: "/admin/vina", label: "Vína" },
+    { href: "/admin/vinarstvi", label: "Vinařství" },
     { href: "/admin/domovska-stranka", label: "Domovská stránka" },
     { href: "/admin/kontakt", label: "Kontakt" },
     { href: "/admin/poptavka", label: "Poptávka" },

@@ -5,8 +5,16 @@ import {
     defaultFeatured,
     defaultInquirySettings,
     defaultProducts,
+    defaultWineries,
 } from "./content-migrate";
-import type { CarouselItem, Contact, FeaturedItem, InquirySettings, Product } from "./content-types";
+import type {
+    CarouselItem,
+    Contact,
+    FeaturedItem,
+    InquirySettings,
+    Product,
+    Winery,
+} from "./content-types";
 import { devRead, devWrite, isDevStorageEnabled } from "./dev-storage";
 import { getRedis } from "./redis";
 import type { CountryId } from "./regions";
@@ -19,6 +27,7 @@ const KEYS = {
     featured: "content:featured",
     contact: "content:contact",
     inquirySettings: "content:inquiry-settings",
+    wineries: "content:wineries",
 } as const;
 
 async function readJson<T>(key: string): Promise<T | null> {
@@ -86,6 +95,16 @@ async function fetchInquirySettings(): Promise<InquirySettings> {
     return stored ?? defaultInquirySettings();
 }
 
+async function fetchWineries(): Promise<Winery[]> {
+    const stored = await readJson<Winery[]>(KEYS.wineries);
+    const wineries = stored ?? defaultWineries();
+    return wineries.map((winery) => ({
+        ...winery,
+        logo: winery.logo || undefined,
+        wineSlugs: winery.wineSlugs ?? [],
+    }));
+}
+
 export const getProducts = unstable_cache(fetchProducts, ["content-products"], {
     tags: ["content"],
 });
@@ -106,6 +125,11 @@ export const getInquirySettings = unstable_cache(fetchInquirySettings, ["content
     tags: ["content"],
 });
 
+export const getWineries = unstable_cache(fetchWineries, ["content:wineries"], {
+    tags: ["content"],
+});
+
+
 export async function getProductsRaw(): Promise<Product[]> {
     return fetchProducts();
 }
@@ -124,6 +148,10 @@ export async function getContactRaw(): Promise<Contact> {
 
 export async function getInquirySettingsRaw(): Promise<InquirySettings> {
     return fetchInquirySettings();
+}
+
+export async function getWineriesRaw(): Promise<Winery[]> {
+    return fetchWineries();
 }
 
 export async function writeProducts(products: Product[]): Promise<void> {
@@ -146,12 +174,26 @@ export async function writeInquirySettings(settings: InquirySettings): Promise<v
     await writeJson(KEYS.inquirySettings, settings);
 }
 
+export async function writeWineries(wineries: Winery[]): Promise<void> {
+    await writeJson(KEYS.wineries, wineries);
+}
+
 export function productById(products: Product[], id: string): Product | undefined {
     return products.find((product) => product.id === id);
 }
 
 export function productBySlug(products: Product[], slug: string): Product | undefined {
     return findWineBySlug(products, slug);
+}
+
+export function wineryBySlug(wineries: Winery[], slug: string): Winery | undefined {
+    return wineries.find((winery) => winery.slug === slug);
+}
+
+export function winesForWinery(winery: Winery, products: Product[]): Product[] {
+    return winery.wineSlugs
+        .map((slug) => findWineBySlug(products, slug))
+        .filter((wine): wine is Product => Boolean(wine));
 }
 
 /** Flat counts by region slug (legacy / Italy-only helpers). */

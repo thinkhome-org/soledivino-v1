@@ -7,6 +7,7 @@ import { useState } from "react";
 const navLinks = [
     { href: "/", label: "O nás" },
     { href: "/products", label: "Naše vína" },
+    { href: "/vinarstvi", label: "Vinařství" },
     { href: "/mapa", label: "Mapa" },
     { href: "/zadost", label: "Žádost" },
     { href: "/kontakty", label: "Kontakty" },
@@ -60,12 +61,12 @@ export default function Navbar() {
                             Nostra famiglia
                         </Link>
                     </h1>
-                    <div className="flex items-center justify-end gap-6 md:gap-8">
+                    <div className="flex items-center justify-end gap-4 lg:gap-7">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="font-sans text-white transition-colors hover:text-white/80"
+                                className="whitespace-nowrap font-sans text-sm text-white transition-colors hover:text-white/80 lg:text-base"
                             >
                                 {link.label}
                             </Link>
@@ -77,7 +78,7 @@ export default function Navbar() {
             {/* Mobile dropdown */}
             <div
                 className={`overflow-hidden border-t border-white/10 bg-black transition-all duration-300 ease-out md:hidden ${
-                    menuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+                    menuOpen ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0"
                 }`}
             >
                 <div className="mx-auto max-w-7xl px-6 py-2">

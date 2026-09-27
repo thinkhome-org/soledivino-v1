@@ -8,9 +8,22 @@ type ImageUploadProps = {
     value: string;
     onChange: (url: string) => void;
     label?: string;
+    variant?: "portrait" | "landscape" | "logo";
 };
 
-export default function ImageUpload({ name, value, onChange, label = "Obrázek" }: ImageUploadProps) {
+const previewClassName = {
+    portrait: "relative h-40 w-32",
+    landscape: "relative h-40 w-full max-w-md",
+    logo: "relative h-20 w-48",
+} as const;
+
+export default function ImageUpload({
+    name,
+    value,
+    onChange,
+    label = "Obrázek",
+    variant = "portrait",
+}: ImageUploadProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -79,8 +92,8 @@ export default function ImageUpload({ name, value, onChange, label = "Obrázek" 
                 }`}
             >
                 {value ? (
-                    <div className="relative h-40 w-32">
-                        <Image src={value} alt="Náhled" fill className="object-contain" sizes="128px" />
+                    <div className={previewClassName[variant]}>
+                        <Image src={value} alt="Náhled" fill className="object-contain" sizes="320px" />
                     </div>
                 ) : (
                     <p className="text-center font-sans text-sm text-black/50">

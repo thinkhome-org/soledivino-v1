@@ -7,6 +7,11 @@ const sections = [
         description: "Správa katalogu vín — přidávání, úpravy a mazání produktů.",
     },
     {
+        href: "/admin/vinarstvi",
+        title: "Vinařství",
+        description: "Stránky vinařů — mřížka, texty, fotky a přiřazená vína.",
+    },
+    {
         href: "/admin/domovska-stranka",
         title: "Domovská stránka",
         description: "Carousel a sekce Náš výběr na úvodní stránce.",

@@ -73,6 +73,18 @@ export type InquirySettings = {
     disabledMessage: string;
 };
 
+export type Winery = {
+    id: string;
+    slug: string;
+    name: string;
+    country: string;
+    description: string;
+    logo?: string;
+    tileImage: string;
+    heroImage: string;
+    wineSlugs: string[];
+};
+
 export const WINE_TYPE_LABELS: Record<WineType, string> = {
     red: "Červené víno",
     white: "Bílé víno",
