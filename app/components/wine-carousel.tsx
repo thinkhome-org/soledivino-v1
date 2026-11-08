@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonLink } from "./button";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type TouchEvent } from "react";
 import type { CarouselItem } from "../lib/content-types";
 
 type WineCarouselProps = {
@@ -66,6 +66,9 @@ export default function WineCarousel({ items }: WineCarouselProps) {
         startTransition(next, "next");
     };
 
+    const touchStartX = useRef<number | null>(null);
+    const touchDeltaX = useRef(0);
+
     useEffect(() => {
         if (!isAnimating) {
             return;
@@ -74,6 +77,38 @@ export default function WineCarousel({ items }: WineCarouselProps) {
         const timer = window.setTimeout(() => setIsAnimating(false), TRANSITION_MS);
         return () => window.clearTimeout(timer);
     }, [isAnimating, transitionKey]);
+
+    const onTouchStart = (event: TouchEvent) => {
+        touchStartX.current = event.touches[0]?.clientX ?? null;
+        touchDeltaX.current = 0;
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+        if (touchStartX.current == null) {
+            return;
+        }
+        touchDeltaX.current = (event.touches[0]?.clientX ?? touchStartX.current) - touchStartX.current;
+    };
+
+    const onTouchEnd = () => {
+        if (touchStartX.current == null) {
+            return;
+        }
+
+        const delta = touchDeltaX.current;
+        touchStartX.current = null;
+        touchDeltaX.current = 0;
+
+        if (Math.abs(delta) < 48) {
+            return;
+        }
+
+        if (delta < 0) {
+            goToNext();
+        } else {
+            goToPrevious();
+        }
+    };
 
     const enterClass = direction === "next" ? "wine-carousel-enter-next" : "wine-carousel-enter-prev";
     const exitClass = direction === "next" ? "wine-carousel-exit-next" : "wine-carousel-exit-prev";
@@ -92,17 +127,22 @@ export default function WineCarousel({ items }: WineCarouselProps) {
                 <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-black/10 via-transparent to-black/25" />
 
                 {/* Mobile layout */}
-                <div className="relative z-10 md:hidden">
-                    <div className="flex items-center gap-2 px-4 pt-4">
+                <div
+                    className="relative z-10 touch-pan-y md:hidden"
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                >
+                    <div className="flex items-center gap-2 px-4 pt-5">
                         <MobileNavButton direction="prev" onClick={goToPrevious} />
-                        <p className="min-w-0 flex-1 text-center font-serif text-lg leading-snug text-white">
+                        <p className="min-w-0 flex-1 text-center font-serif text-xl leading-snug text-white">
                             {activeWine.name}
                         </p>
                         <MobileNavButton direction="next" onClick={goToNext} />
                     </div>
 
-                    <div className="flex justify-center px-4">
-                        <div className="relative">
+                    <div className="flex justify-center px-4 pt-2">
+                        <div className="relative min-h-[min(42dvh,380px)]">
                             {showPrevious ? (
                                 <Image
                                     key={`exit-${transitionKey}-${prevIndex}`}
@@ -111,7 +151,7 @@ export default function WineCarousel({ items }: WineCarouselProps) {
                                     width={400}
                                     height={1000}
                                     priority
-                                    className={`pointer-events-none absolute left-1/2 top-0 w-[min(50vw,200px)] max-h-[min(46dvh,420px)] -translate-x-1/2 h-auto object-contain drop-shadow-2xl ${exitClass}`}
+                                    className={`pointer-events-none absolute left-1/2 top-0 h-auto max-h-[min(42dvh,380px)] w-[min(56vw,220px)] -translate-x-1/2 object-contain drop-shadow-2xl ${exitClass}`}
                                 />
                             ) : null}
                             <Image
@@ -121,37 +161,45 @@ export default function WineCarousel({ items }: WineCarouselProps) {
                                 width={400}
                                 height={1000}
                                 priority
-                                className={`w-[min(50vw,200px)] max-h-[min(46dvh,420px)] h-auto object-contain drop-shadow-2xl ${
+                                className={`h-auto max-h-[min(42dvh,380px)] w-[min(56vw,220px)] object-contain drop-shadow-2xl ${
                                     isAnimating ? enterClass : ""
                                 }`}
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-4 px-4 py-5 text-white">
-                        <p className="font-sans text-base leading-relaxed">{activeWine.description}</p>
+                    <div className="space-y-5 px-5 pb-2 pt-4 text-white">
+                        <p className="line-clamp-4 font-sans text-[0.95rem] leading-relaxed text-white/95">
+                            {activeWine.description}
+                        </p>
 
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-3">
+                            <ButtonLink
+                                href={`/products?wine=${activeWine.productSlug}`}
+                                variant="black"
+                                className="w-full"
+                            >
+                                Přidat
+                            </ButtonLink>
                             <Link
                                 href={`/about-wine/${activeWine.productSlug}`}
-                                className="font-sans text-base text-white underline"
+                                className="py-1 text-center font-sans text-sm text-white/90 underline underline-offset-4"
                             >
                                 Více o produktu
                             </Link>
-                            <ButtonLink href={`/products?wine=${activeWine.productSlug}`} variant="black">
-                                Přidat
-                            </ButtonLink>
                         </div>
                     </div>
 
-                    <div className="flex justify-center gap-2 pb-4">
+                    <div className="flex justify-center gap-2 pb-5 pt-1">
                         {wines.map((wine, index) => (
                             <button
                                 key={wine.id}
                                 type="button"
-                                onClick={() => startTransition(index, index > activeIndexRef.current ? "next" : "prev")}
+                                onClick={() =>
+                                    startTransition(index, index > activeIndexRef.current ? "next" : "prev")
+                                }
                                 className={`h-1.5 rounded-full transition-all ${
-                                    index === activeIndex ? "w-5 bg-white" : "w-1.5 bg-white/40"
+                                    index === activeIndex ? "w-6 bg-white" : "w-1.5 bg-white/40"
                                 }`}
                                 aria-label={`Přejít na ${wine.name}`}
                             />
