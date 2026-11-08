@@ -12,6 +12,7 @@ import type {
 import { newId } from "@/app/lib/content-migrate";
 import { getProductsRaw } from "@/app/lib/content";
 import { COUNTRY_DEFINITIONS, isCountryId } from "@/app/lib/regions";
+import { normalizeProduct } from "@/app/lib/product-country";
 import { parseWineImportPayload } from "@/app/lib/wine-import";
 import { toWineSlug } from "@/app/lib/wine-slug";
 
@@ -72,7 +73,7 @@ function parseWineForm(formData: FormData, existing?: Product): Product | null {
         return null;
     }
 
-    return {
+    return normalizeProduct({
         id: existing?.id ?? newId(),
         slug: toWineSlug(name),
         name,
@@ -97,7 +98,7 @@ function parseWineForm(formData: FormData, existing?: Product): Product | null {
         winemakerPhilosophy: optionalText(formData, "winemakerPhilosophy"),
         emotionalTrace: optionalText(formData, "emotionalTrace"),
         pairing: optionalText(formData, "pairing"),
-    };
+    });
 }
 
 export async function createWineAction(

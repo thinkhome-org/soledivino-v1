@@ -18,7 +18,8 @@ import type {
 import { devRead, devWrite, isDevStorageEnabled } from "./dev-storage";
 import { getRedis } from "./redis";
 import type { CountryId } from "./regions";
-import { COUNTRY_ORDER, toRegionSlug } from "./regions";
+import { COUNTRY_ORDER, isCountryId, toRegionSlug } from "./regions";
+import { normalizeProducts } from "./product-country";
 import { findWineBySlug } from "./wine-slug";
 
 const KEYS = {
@@ -68,11 +69,22 @@ async function writeJson(key: string, value: unknown): Promise<void> {
 
 async function fetchProducts(): Promise<Product[]> {
     const stored = await readJson<Product[]>(KEYS.products);
-    const products = stored ?? defaultProducts();
-    return products.map((product) => ({
-        ...product,
-        country: product.country ?? "italy",
-    }));
+    const products = normalizeProducts(stored ?? defaultProducts());
+
+    // Backfill Redis/dev storage when legacy products lack a valid country id.
+    const needsBackfill =
+        Boolean(stored) &&
+        stored!.some((product) => !product.country || !isCountryId(product.country));
+
+    if (needsBackfill) {
+        try {
+            await writeJson(KEYS.products, products);
+        } catch {
+            // Read path must stay resilient if storage is read-only.
+        }
+    }
+
+    return products;
 }
 
 async function fetchCarousel(): Promise<CarouselItem[]> {
@@ -155,7 +167,7 @@ export async function getWineriesRaw(): Promise<Winery[]> {
 }
 
 export async function writeProducts(products: Product[]): Promise<void> {
-    await writeJson(KEYS.products, products);
+    await writeJson(KEYS.products, normalizeProducts(products));
 }
 
 export async function writeCarousel(items: CarouselItem[]): Promise<void> {

@@ -429,7 +429,7 @@ export function parseWineImportPayload(raw: string, existing: Product[]): ParseW
             failed.push({
                 index,
                 name,
-                message: "Neznámá země (country). Použijte italy, germany, austria nebo france.",
+                message: `Neznámá země (country). Použijte jednu z: ${COUNTRY_ORDER.join(", ")}.`,
             });
             return;
         }

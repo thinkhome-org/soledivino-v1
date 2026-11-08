@@ -147,12 +147,12 @@ export default function WineMap({ regionCountsByCountry, countryCounts }: WineMa
         return (
             <div
                 ref={mapRef}
-                className="relative mx-auto w-full max-w-[min(100%,1100px)] px-1 py-2 md:px-2 md:py-4"
+                className="relative mx-auto w-full max-w-[min(100%,1400px)] px-1 py-2 md:px-2 md:py-4"
                 onMouseLeave={hideAllTooltips}
             >
                 <svg
                     viewBox={EUROPE_COUNTRIES.viewBox}
-                    className="mx-auto block h-auto w-full"
+                    className="mx-auto block h-auto w-full min-h-[min(70vh,820px)]"
                     preserveAspectRatio="xMidYMid meet"
                     role="img"
                     aria-label="Evropa"
@@ -221,20 +221,20 @@ export default function WineMap({ regionCountsByCountry, countryCounts }: WineMa
     }
 
     return (
-        <div className="relative">
+        <div className="relative w-full">
             <button
                 type="button"
                 onClick={backToCountries}
-                className="absolute left-0 top-0 z-10 flex h-10 w-10 items-center justify-center text-[#1D1D1D]/45 transition-colors hover:text-[#8B2D3D]"
+                className="absolute left-0 top-0 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-black/8 text-[#1D1D1D] transition-colors hover:bg-black/12 hover:text-[#8B2D3D] md:h-12 md:w-12"
                 aria-label="Zpět na země"
             >
                 <svg
                     viewBox="0 0 24 24"
                     fill="none"
                     aria-hidden
-                    className="h-5 w-5"
+                    className="h-6 w-6 md:h-7 md:w-7"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="2.25"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 >
@@ -244,17 +244,17 @@ export default function WineMap({ regionCountsByCountry, countryCounts }: WineMa
 
             <div
                 ref={mapRef}
-                className="relative mx-auto w-full max-w-[min(100%,1100px)] pt-10 md:pt-12"
+                className="relative mx-auto w-full max-w-[min(100%,1200px)] pt-12 md:pt-14"
                 onMouseLeave={hideAllTooltips}
             >
                 {loadingRegions || !regionPaths ? (
-                    <div className="flex min-h-[420px] items-center justify-center font-sans text-sm text-[#1D1D1D]/45">
+                    <div className="flex min-h-[min(70vh,720px)] items-center justify-center font-sans text-sm text-[#1D1D1D]/45">
                         Načítám mapu…
                     </div>
                 ) : (
                     <svg
                         viewBox={countryDef.viewBox}
-                        className="mx-auto block h-auto w-full"
+                        className="mx-auto block h-auto w-full min-h-[min(72vh,860px)]"
                         preserveAspectRatio="xMidYMid meet"
                         role="img"
                         aria-label={countryDef.labelCs}

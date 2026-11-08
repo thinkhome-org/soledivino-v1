@@ -1,6 +1,7 @@
 [
   {
     "name": "Barolo Bussia",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Piemonte",
     "color": "#8B2D3D",
@@ -9,6 +10,7 @@
   },
   {
     "name": "Amarone",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Veneto",
     "color": "#A18136",
@@ -17,6 +19,7 @@
   },
   {
     "name": "Costadoro Marche Rosso",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Marche",
     "color": "#BF8993",
@@ -25,6 +28,7 @@
   },
   {
     "name": "Chianti Classico",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Toscana",
     "color": "#8B2D3D",
@@ -33,6 +37,7 @@
   },
   {
     "name": "Montepulciano d'Abruzzo",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Abruzzo",
     "color": "#BF8993",
@@ -41,6 +46,7 @@
   },
   {
     "name": "Nero d'Avola",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Sicilia",
     "color": "#8B2D3D",
@@ -49,6 +55,7 @@
   },
   {
     "name": "Primitivo di Manduria",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Puglia",
     "color": "#8B2D3D",
@@ -57,6 +64,7 @@
   },
   {
     "name": "Brunello di Montalcino",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Toscana",
     "color": "#A18136",
@@ -65,6 +73,7 @@
   },
   {
     "name": "Valpolicella Ripasso",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Veneto",
     "color": "#BF8993",
@@ -73,6 +82,7 @@
   },
   {
     "name": "Soave Classico",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Veneto",
     "color": "#A18136",
@@ -81,6 +91,7 @@
   },
   {
     "name": "Falanghina",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Campania",
     "color": "#A18136",
@@ -89,6 +100,7 @@
   },
   {
     "name": "Vermentino",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Sardegna",
     "color": "#BF8993",
@@ -97,6 +109,7 @@
   },
   {
     "name": "Greco di Tufo",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Campania",
     "color": "#A18136",
@@ -105,6 +118,7 @@
   },
   {
     "name": "Lugana",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Veneto",
     "color": "#BF8993",
@@ -113,6 +127,7 @@
   },
   {
     "name": "Etna Rosso",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Sicilia",
     "color": "#8B2D3D",
@@ -121,6 +136,7 @@
   },
   {
     "name": "Lambrusco Grasparossa",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Emilia-Romagna",
     "color": "#8B2D3D",
@@ -129,6 +145,7 @@
   },
   {
     "name": "Cannonau",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Sardegna",
     "color": "#A18136",
@@ -137,6 +154,7 @@
   },
   {
     "name": "Rosato di Puglia",
+    "country": "italy",
     "region": "Itálie",
     "regione": "Puglia",
     "color": "#BF8993",

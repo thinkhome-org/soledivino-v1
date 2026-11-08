@@ -15,10 +15,12 @@ import type {
     WineType,
     Winery,
 } from "./content-types";
+import { inferCountryFromRegione, resolveCountryId } from "./product-country";
 import { toWineSlug } from "./wine-slug";
 
 type LegacyProduct = {
     name: string;
+    country?: string;
     region: string;
     regione: string;
     color: string;
@@ -167,22 +169,29 @@ function stableId(prefix: string, key: string): string {
 }
 
 export function defaultProducts(): Product[] {
-    return (productsJson as LegacyProduct[]).map((wine) => ({
-        id: stableId("product", wine.name),
-        slug: toWineSlug(wine.name),
-        name: wine.name,
-        country: "italy" as const,
-        region: wine.region,
-        regione: wine.regione,
-        type: inferWineType(wine.name),
-        color: wine.color,
-        image: wine.image,
-        description: wine.description,
-        alcohol: "xx%",
-        volume: "0.75l",
-        vintage: "2020",
-        ...SAMPLE_NARRATIVES[wine.name],
-    }));
+    return (productsJson as LegacyProduct[]).map((wine) => {
+        const country =
+            resolveCountryId(wine.country) ??
+            inferCountryFromRegione(wine.regione) ??
+            "italy";
+
+        return {
+            id: stableId("product", wine.name),
+            slug: toWineSlug(wine.name),
+            name: wine.name,
+            country,
+            region: wine.region,
+            regione: wine.regione,
+            type: inferWineType(wine.name),
+            color: wine.color,
+            image: wine.image,
+            description: wine.description,
+            alcohol: "xx%",
+            volume: "0.75l",
+            vintage: "2020",
+            ...SAMPLE_NARRATIVES[wine.name],
+        };
+    });
 }
 
 export function defaultCarousel(): CarouselItem[] {

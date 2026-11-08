@@ -34,7 +34,7 @@ export default function Navbar() {
 
     return (
         <nav className="sticky top-0 z-50 bg-black text-white">
-            <div className="mx-auto max-w-7xl px-6 py-4">
+            <div className="mx-auto w-full max-w-[1600px] px-5 py-4 sm:px-8 md:px-10 md:py-5 xl:px-14">
                 {/* Mobile: logo + hamburger */}
                 <div className="flex items-center justify-between md:hidden">
                     <Link href="/" className="flex w-fit items-center" onClick={() => setMenuOpen(false)}>
@@ -56,17 +56,17 @@ export default function Navbar() {
                     <Link href="/" className="flex w-fit items-center">
                         <Image src="/logo.svg" alt="Logo" width={35} height={42} className="h-auto w-auto" />
                     </Link>
-                    <h1 className="text-center font-serif text-2xl text-white">
+                    <h1 className="text-center font-serif text-2xl text-white xl:text-3xl">
                         <Link href="/" className="transition-colors hover:text-white/90">
                             Nostra famiglia
                         </Link>
                     </h1>
-                    <div className="flex items-center justify-end gap-4 lg:gap-7">
+                    <div className="flex items-center justify-end gap-5 lg:gap-8 xl:gap-10">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className="whitespace-nowrap font-sans text-sm text-white transition-colors hover:text-white/80 lg:text-base"
+                                className="whitespace-nowrap font-sans text-sm text-white transition-colors hover:text-white/80 lg:text-base xl:text-[1.05rem]"
                             >
                                 {link.label}
                             </Link>
@@ -81,7 +81,7 @@ export default function Navbar() {
                     menuOpen ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0"
                 }`}
             >
-                <div className="mx-auto max-w-7xl px-6 py-2">
+                <div className="mx-auto w-full max-w-[1600px] px-5 py-2 sm:px-8">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
