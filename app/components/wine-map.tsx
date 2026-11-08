@@ -147,12 +147,12 @@ export default function WineMap({ regionCountsByCountry, countryCounts }: WineMa
         return (
             <div
                 ref={mapRef}
-                className="relative flex min-h-0 w-full flex-1 items-center justify-center"
+                className="relative flex h-full min-h-0 w-full flex-1 items-center justify-center"
                 onMouseLeave={hideAllTooltips}
             >
                 <svg
                     viewBox={EUROPE_COUNTRIES.viewBox}
-                    className="block h-full max-h-full w-full max-w-full"
+                    className="block h-full w-full"
                     preserveAspectRatio="xMidYMid meet"
                     role="img"
                     aria-label="Evropa"
@@ -221,7 +221,7 @@ export default function WineMap({ regionCountsByCountry, countryCounts }: WineMa
     }
 
     return (
-        <div className="relative flex min-h-0 w-full flex-1 flex-col">
+        <div className="relative flex h-full min-h-0 w-full flex-1 flex-col">
             <button
                 type="button"
                 onClick={backToCountries}
@@ -244,17 +244,17 @@ export default function WineMap({ regionCountsByCountry, countryCounts }: WineMa
 
             <div
                 ref={mapRef}
-                className="relative flex min-h-0 w-full flex-1 items-center justify-center pt-12 md:pt-14"
+                className="relative flex h-full min-h-0 w-full flex-1 items-center justify-center pt-12 md:pt-14"
                 onMouseLeave={hideAllTooltips}
             >
                 {loadingRegions || !regionPaths ? (
-                    <div className="flex h-full min-h-[240px] w-full items-center justify-center font-sans text-sm text-[#1D1D1D]/45">
+                    <div className="flex h-full w-full items-center justify-center font-sans text-sm text-[#1D1D1D]/45">
                         Načítám mapu…
                     </div>
                 ) : (
                     <svg
                         viewBox={countryDef.viewBox}
-                        className="block h-full max-h-full w-full max-w-full"
+                        className="block h-full w-full"
                         preserveAspectRatio="xMidYMid meet"
                         role="img"
                         aria-label={countryDef.labelCs}
