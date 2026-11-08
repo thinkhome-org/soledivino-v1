@@ -8,10 +8,10 @@ export default async function MapaPage() {
     const countryCounts = countryWineCounts(products);
 
     return (
-        <div className="flex min-h-screen flex-col bg-[#EFEFEF]">
+        <div className="flex min-h-dvh flex-col bg-[#EFEFEF]">
             <Navbar />
 
-            <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-3 py-4 md:px-6 md:py-6">
+            <main className="mx-auto flex w-full flex-1 flex-col px-4 pb-10 pt-4 sm:px-6 sm:pb-12 md:px-10 md:pb-14 md:pt-6 lg:px-16 lg:pb-16">
                 <WineMap
                     regionCountsByCountry={regionCountsByCountry}
                     countryCounts={countryCounts}
