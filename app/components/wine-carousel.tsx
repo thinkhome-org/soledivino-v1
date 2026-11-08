@@ -133,16 +133,32 @@ export default function WineCarousel({ items }: WineCarouselProps) {
                     onTouchMove={onTouchMove}
                     onTouchEnd={onTouchEnd}
                 >
-                    <div className="flex items-center gap-2 px-4 pt-5">
+                    <div className="flex items-center justify-between px-4 pt-5">
                         <MobileNavButton direction="prev" onClick={goToPrevious} />
-                        <p className="min-w-0 flex-1 text-center font-serif text-xl leading-snug text-white">
-                            {activeWine.name}
-                        </p>
+                        <div className="flex gap-1.5">
+                            {wines.map((wine, index) => (
+                                <button
+                                    key={wine.id}
+                                    type="button"
+                                    onClick={() =>
+                                        startTransition(
+                                            index,
+                                            index > activeIndexRef.current ? "next" : "prev",
+                                        )
+                                    }
+                                    className={`h-1 rounded-full transition-all ${
+                                        index === activeIndex ? "w-5 bg-white" : "w-1.5 bg-white/35"
+                                    }`}
+                                    aria-label={`Přejít na ${wine.name}`}
+                                    aria-current={index === activeIndex ? "true" : undefined}
+                                />
+                            ))}
+                        </div>
                         <MobileNavButton direction="next" onClick={goToNext} />
                     </div>
 
-                    <div className="flex justify-center px-4 pt-2">
-                        <div className="relative min-h-[min(42dvh,380px)]">
+                    <div className="flex justify-center px-4 pt-3">
+                        <div className="relative flex min-h-[min(40dvh,360px)] items-end justify-center">
                             {showPrevious ? (
                                 <Image
                                     key={`exit-${transitionKey}-${prevIndex}`}
@@ -151,7 +167,7 @@ export default function WineCarousel({ items }: WineCarouselProps) {
                                     width={400}
                                     height={1000}
                                     priority
-                                    className={`pointer-events-none absolute left-1/2 top-0 h-auto max-h-[min(42dvh,380px)] w-[min(56vw,220px)] -translate-x-1/2 object-contain drop-shadow-2xl ${exitClass}`}
+                                    className={`pointer-events-none absolute bottom-0 left-1/2 h-auto max-h-[min(40dvh,360px)] w-[min(52vw,210px)] -translate-x-1/2 object-contain drop-shadow-2xl ${exitClass}`}
                                 />
                             ) : null}
                             <Image
@@ -161,49 +177,33 @@ export default function WineCarousel({ items }: WineCarouselProps) {
                                 width={400}
                                 height={1000}
                                 priority
-                                className={`h-auto max-h-[min(42dvh,380px)] w-[min(56vw,220px)] object-contain drop-shadow-2xl ${
+                                className={`h-auto max-h-[min(40dvh,360px)] w-[min(52vw,210px)] object-contain drop-shadow-2xl ${
                                     isAnimating ? enterClass : ""
                                 }`}
                             />
                         </div>
                     </div>
 
-                    <div className="space-y-5 px-5 pb-2 pt-4 text-white">
-                        <p className="line-clamp-4 font-sans text-[0.95rem] leading-relaxed text-white/95">
+                    <div className="px-5 pb-6 pt-5 text-white">
+                        <h2 className="font-serif text-2xl leading-tight">{activeWine.name}</h2>
+                        <p className="mt-3 line-clamp-3 font-sans text-sm leading-relaxed text-white/90">
                             {activeWine.description}
                         </p>
-
-                        <div className="flex flex-col gap-3">
+                        <div className="mt-5 flex items-center gap-3">
                             <ButtonLink
                                 href={`/products?wine=${activeWine.productSlug}`}
                                 variant="black"
-                                className="w-full"
+                                className="flex-1"
                             >
                                 Přidat
                             </ButtonLink>
                             <Link
                                 href={`/about-wine/${activeWine.productSlug}`}
-                                className="py-1 text-center font-sans text-sm text-white/90 underline underline-offset-4"
+                                className="shrink-0 px-2 font-sans text-sm text-white/90 underline underline-offset-4"
                             >
-                                Více o produktu
+                                Více
                             </Link>
                         </div>
-                    </div>
-
-                    <div className="flex justify-center gap-2 pb-5 pt-1">
-                        {wines.map((wine, index) => (
-                            <button
-                                key={wine.id}
-                                type="button"
-                                onClick={() =>
-                                    startTransition(index, index > activeIndexRef.current ? "next" : "prev")
-                                }
-                                className={`h-1.5 rounded-full transition-all ${
-                                    index === activeIndex ? "w-6 bg-white" : "w-1.5 bg-white/40"
-                                }`}
-                                aria-label={`Přejít na ${wine.name}`}
-                            />
-                        ))}
                     </div>
                 </div>
 
