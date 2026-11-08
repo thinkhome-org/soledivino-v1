@@ -18,7 +18,7 @@ import type {
 import { devRead, devWrite, isDevStorageEnabled } from "./dev-storage";
 import { getRedis } from "./redis";
 import type { CountryId } from "./regions";
-import { toRegionSlug } from "./regions";
+import { COUNTRY_ORDER, toRegionSlug } from "./regions";
 import { findWineBySlug } from "./wine-slug";
 
 const KEYS = {
@@ -210,15 +210,16 @@ export function regionCounts(products: Product[]): Record<string, number> {
 export function countryRegionCounts(
     products: Product[],
 ): Record<CountryId, Record<string, number>> {
-    const counts = {
-        italy: {},
-        germany: {},
-        austria: {},
-        france: {},
-    } as Record<CountryId, Record<string, number>>;
+    const counts = Object.fromEntries(COUNTRY_ORDER.map((id) => [id, {}])) as Record<
+        CountryId,
+        Record<string, number>
+    >;
 
     for (const wine of products) {
         const country = wine.country ?? "italy";
+        if (!counts[country]) {
+            counts[country] = {};
+        }
         const slug = toRegionSlug(wine.regione);
         counts[country][slug] = (counts[country][slug] ?? 0) + 1;
     }
@@ -227,16 +228,16 @@ export function countryRegionCounts(
 }
 
 export function countryWineCounts(products: Product[]): Record<CountryId, number> {
-    const counts: Record<CountryId, number> = {
-        italy: 0,
-        germany: 0,
-        austria: 0,
-        france: 0,
-    };
+    const counts = Object.fromEntries(COUNTRY_ORDER.map((id) => [id, 0])) as Record<
+        CountryId,
+        number
+    >;
 
     for (const wine of products) {
         const country = wine.country ?? "italy";
-        counts[country] += 1;
+        if (country in counts) {
+            counts[country] += 1;
+        }
     }
 
     return counts;

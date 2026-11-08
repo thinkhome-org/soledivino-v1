@@ -5,7 +5,12 @@ import type {
     WineType,
 } from "./content-types";
 import type { CountryId } from "./regions";
-import { COUNTRY_DEFINITIONS, COUNTRY_LABELS, COUNTRY_ORDER } from "./regions";
+import {
+    COUNTRY_DEFINITIONS,
+    COUNTRY_ID_TO_ISO2,
+    COUNTRY_LABELS,
+    COUNTRY_ORDER,
+} from "./regions";
 import { toWineSlug } from "./wine-slug";
 
 export const WINE_IMPORT_PLACEHOLDER_IMAGE = "/placeholder-wine.png";
@@ -70,6 +75,7 @@ function addCountryAlias(alias: string, country: CountryId) {
 for (const id of COUNTRY_ORDER) {
     addCountryAlias(id, id);
     addCountryAlias(COUNTRY_LABELS[id], id);
+    addCountryAlias(COUNTRY_ID_TO_ISO2[id], id);
 }
 
 addCountryAlias("italia", "italy");
@@ -84,13 +90,27 @@ addCountryAlias("at", "austria");
 addCountryAlias("frankreich", "france");
 addCountryAlias("francia", "france");
 addCountryAlias("fr", "france");
+addCountryAlias("espana", "spain");
+addCountryAlias("spanien", "spain");
+addCountryAlias("es", "spain");
+addCountryAlias("portugal", "portugal");
+addCountryAlias("pt", "portugal");
+addCountryAlias("schweiz", "switzerland");
+addCountryAlias("suisse", "switzerland");
+addCountryAlias("svizzera", "switzerland");
+addCountryAlias("ch", "switzerland");
+addCountryAlias("cesko", "czechia");
+addCountryAlias("ceska republika", "czechia");
+addCountryAlias("czech republic", "czechia");
+addCountryAlias("cz", "czechia");
+addCountryAlias("uk", "united_kingdom");
+addCountryAlias("great britain", "united_kingdom");
+addCountryAlias("gb", "united_kingdom");
 
-const REGION_INDEX: Record<CountryId, Map<string, string>> = {
-    italy: new Map(),
-    germany: new Map(),
-    austria: new Map(),
-    france: new Map(),
-};
+const REGION_INDEX = Object.fromEntries(COUNTRY_ORDER.map((id) => [id, new Map()])) as Record<
+    CountryId,
+    Map<string, string>
+>;
 
 function addRegionAlias(country: CountryId, alias: string, canonical: string) {
     REGION_INDEX[country].set(normalizeKey(alias), canonical);
@@ -102,7 +122,7 @@ for (const country of COUNTRY_ORDER) {
     }
 }
 
-const REGION_ALIASES: Record<CountryId, [string, string][]> = {
+const REGION_ALIASES: Partial<Record<CountryId, [string, string][]>> = {
     italy: [
         ["piedmont", "Piemonte"],
         ["piemont", "Piemonte"],
@@ -208,7 +228,7 @@ const REGION_ALIASES: Record<CountryId, [string, string][]> = {
 };
 
 for (const country of COUNTRY_ORDER) {
-    for (const [alias, canonical] of REGION_ALIASES[country]) {
+    for (const [alias, canonical] of REGION_ALIASES[country] ?? []) {
         if (!REGION_INDEX[country].has(normalizeKey(alias))) {
             addRegionAlias(country, alias, canonical);
         }
@@ -533,7 +553,7 @@ VÝSTUP
 
 POVINNÁ POLE u každého vína
 - name (string) — přesný název vína
-- country — přesně jedna hodnota: "italy" | "germany" | "austria" | "france"
+- country — přesně jedna hodnota z: ${COUNTRY_ORDER.map((id) => `"${id}"`).join(" | ")}
 - regione — přesný název správního regionu ze seznamu níže (NE apelace typu Barolo / Chianti / Bordeaux)
 - type — přesně: "red" | "white" | "rose"
 - description — krátký úvod na detail vína, 1–3 věty česky

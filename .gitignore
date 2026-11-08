@@ -43,3 +43,6 @@ next-env.d.ts
 # local admin dev storage
 /.data/
 /public/uploads/
+
+# Simplemaps SVG download cache
+/.cache/

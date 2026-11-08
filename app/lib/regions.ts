@@ -1,156 +1,114 @@
 import { toWineSlug } from "./wine-slug";
-import italyPaths from "@/app/data/italy-regions-paths.json";
-import germanyPaths from "@/app/data/germany-regions-paths.json";
-import austriaPaths from "@/app/data/austria-regions-paths.json";
-import francePaths from "@/app/data/france-regions-paths.json";
-import countriesOutlines from "@/app/data/countries-outlines.json";
-
-export type CountryId = "italy" | "germany" | "austria" | "france";
+import europeRegistryJson from "@/app/data/europe-registry.json";
+import europeCountriesPathsJson from "@/app/data/europe-countries-paths.json";
 
 export type RegionPath = { id: string; d: string };
 
-export type CountryOutline = {
-    id: CountryId;
+export type EuropeCountriesData = {
     viewBox: string;
     paths: RegionPath[];
 };
+
+type RegistryEntry = {
+    id: string;
+    iso2: string;
+    labelCs: string;
+    viewBox: string;
+    idToRegion: Record<string, string>;
+};
+
+const REGISTRY = europeRegistryJson as unknown as RegistryEntry[];
+
+/** All map countries (Europe SVG, without Turkey/Russia). */
+export const COUNTRY_ORDER = REGISTRY.map((entry) => entry.id) as CountryId[];
+
+export type CountryId = (typeof REGISTRY)[number]["id"];
+
+export type CountryDefinition = {
+    id: CountryId;
+    iso2: string;
+    labelCs: string;
+    viewBox: string;
+    idToRegion: Record<string, string>;
+    regions: string[];
+};
+
+const COUNTRY_ID_SET = new Set<string>(COUNTRY_ORDER);
+
+export const COUNTRY_DEFINITIONS: Record<CountryId, CountryDefinition> = Object.fromEntries(
+    REGISTRY.map((entry) => {
+        const id = entry.id as CountryId;
+        const def: CountryDefinition = {
+            id,
+            iso2: entry.iso2,
+            labelCs: entry.labelCs,
+            viewBox: entry.viewBox,
+            idToRegion: entry.idToRegion,
+            regions: Object.values(entry.idToRegion),
+        };
+        return [id, def];
+    }),
+) as Record<CountryId, CountryDefinition>;
+
+export const COUNTRY_LABELS: Record<CountryId, string> = Object.fromEntries(
+    REGISTRY.map((entry) => [entry.id, entry.labelCs]),
+) as Record<CountryId, string>;
+
+export const ISO2_TO_COUNTRY_ID: Record<string, CountryId> = Object.fromEntries(
+    REGISTRY.map((entry) => [entry.iso2, entry.id as CountryId]),
+);
+
+export const COUNTRY_ID_TO_ISO2: Record<CountryId, string> = Object.fromEntries(
+    REGISTRY.map((entry) => [entry.id, entry.iso2]),
+) as Record<CountryId, string>;
+
+export const EUROPE_COUNTRIES = europeCountriesPathsJson as EuropeCountriesData;
+
+const regionPathLoaders: Record<CountryId, () => Promise<RegionPath[]>> = Object.fromEntries(
+    COUNTRY_ORDER.map((id) => [
+        id,
+        async () => {
+            const mod = await import(`@/app/data/regions/${id}-regions-paths.json`);
+            return (mod.default ?? mod) as RegionPath[];
+        },
+    ]),
+) as Record<CountryId, () => Promise<RegionPath[]>>;
+
+const regionPathCache = new Map<CountryId, RegionPath[]>();
+
+export async function loadCountryRegionPaths(country: CountryId): Promise<RegionPath[]> {
+    const cached = regionPathCache.get(country);
+    if (cached) {
+        return cached;
+    }
+
+    const loader = regionPathLoaders[country];
+    if (!loader) {
+        return [];
+    }
+
+    const paths = await loader();
+    regionPathCache.set(country, paths);
+    return paths;
+}
 
 export function toRegionSlug(name: string): string {
     return toWineSlug(name);
 }
 
-/** @deprecated Use COUNTRY_DEFINITIONS.italy.idToRegion — kept for any leftover imports */
-export const SVG_ID_TO_REGION: Record<string, string> = {
-    IT21: "Piemonte",
-    IT23: "Valle d'Aosta",
-    IT42: "Liguria",
-    IT25: "Lombardia",
-    IT32: "Trentino-Alto Adige",
-    IT34: "Veneto",
-    IT36: "Friuli-Venezia Giulia",
-    IT45: "Emilia-Romagna",
-    IT52: "Toscana",
-    IT55: "Umbria",
-    IT57: "Marche",
-    IT62: "Lazio",
-    IT65: "Abruzzo",
-    IT67: "Molise",
-    IT72: "Campania",
-    IT75: "Puglia",
-    IT77: "Basilicata",
-    IT78: "Calabria",
-    IT82: "Sicilia",
-    IT88: "Sardegna",
-};
-
-const GERMANY_ID_TO_REGION: Record<string, string> = {
-    DESN: "Sachsen",
-    DEBY: "Bayern",
-    DERP: "Rheinland-Pfalz",
-    DESL: "Saarland",
-    DESH: "Schleswig-Holstein",
-    DENI: "Niedersachsen",
-    DENW: "Nordrhein-Westfalen",
-    DEBW: "Baden-Württemberg",
-    DEBB: "Brandenburg",
-    DEMV: "Mecklenburg-Vorpommern",
-    DEHB: "Bremen",
-    DEHH: "Hamburg",
-    DEHE: "Hessen",
-    DETH: "Thüringen",
-    DEST: "Sachsen-Anhalt",
-    DEBE: "Berlin",
-};
-
-const AUSTRIA_ID_TO_REGION: Record<string, string> = {
-    AT3: "Niederösterreich",
-    AT4: "Oberösterreich",
-    AT1: "Burgenland",
-    AT8: "Vorarlberg",
-    AT7: "Tirol",
-    AT5: "Salzburg",
-    AT2: "Kärnten",
-    AT6: "Steiermark",
-    AT9: "Wien",
-};
-
-const FRANCE_ID_TO_REGION: Record<string, string> = {
-    FRHDF: "Hauts-de-France",
-    FRGES: "Grand Est",
-    FRPAC: "Provence-Alpes-Côte d'Azur",
-    FRARA: "Auvergne-Rhône-Alpes",
-    FRBFC: "Bourgogne-Franche-Comté",
-    FROCC: "Occitanie",
-    FRPDL: "Pays de la Loire",
-    FRBRE: "Bretagne",
-    FRNOR: "Normandie",
-    FR20R: "Corse",
-    FRNAQ: "Nouvelle-Aquitaine",
-    FRCVL: "Centre-Val de Loire",
-    FRIDF: "Île-de-France",
-};
-
-export type CountryDefinition = {
-    id: CountryId;
-    labelCs: string;
-    viewBox: string;
-    paths: RegionPath[];
-    idToRegion: Record<string, string>;
-    regions: string[];
-};
-
-export const COUNTRY_ORDER: CountryId[] = ["italy", "germany", "austria", "france"];
-
-export const COUNTRY_DEFINITIONS: Record<CountryId, CountryDefinition> = {
-    italy: {
-        id: "italy",
-        labelCs: "Itálie",
-        viewBox: "0 0 1000 1000",
-        paths: italyPaths as RegionPath[],
-        idToRegion: SVG_ID_TO_REGION,
-        regions: Object.values(SVG_ID_TO_REGION),
-    },
-    germany: {
-        id: "germany",
-        labelCs: "Německo",
-        viewBox: "0 0 1000 1000",
-        paths: germanyPaths as RegionPath[],
-        idToRegion: GERMANY_ID_TO_REGION,
-        regions: Object.values(GERMANY_ID_TO_REGION),
-    },
-    austria: {
-        id: "austria",
-        labelCs: "Rakousko",
-        viewBox: "0 0 1000 1000",
-        paths: austriaPaths as RegionPath[],
-        idToRegion: AUSTRIA_ID_TO_REGION,
-        regions: Object.values(AUSTRIA_ID_TO_REGION),
-    },
-    france: {
-        id: "france",
-        labelCs: "Francie",
-        viewBox: "0 0 1000 1000",
-        paths: francePaths as RegionPath[],
-        idToRegion: FRANCE_ID_TO_REGION,
-        regions: Object.values(FRANCE_ID_TO_REGION),
-    },
-};
-
-export const COUNTRY_LABELS: Record<CountryId, string> = {
-    italy: "Itálie",
-    germany: "Německo",
-    austria: "Rakousko",
-    france: "Francie",
-};
-
-export const COUNTRY_OUTLINES = countriesOutlines as CountryOutline[];
-
 export function isCountryId(value: string | null | undefined): value is CountryId {
-    return value === "italy" || value === "germany" || value === "austria" || value === "france";
+    return typeof value === "string" && COUNTRY_ID_SET.has(value);
 }
 
 export function parseCountryId(value: string | null | undefined): CountryId | null {
     return isCountryId(value) ? value : null;
+}
+
+export function parseCountryIdFromIso2(iso2: string | null | undefined): CountryId | null {
+    if (!iso2) {
+        return null;
+    }
+    return ISO2_TO_COUNTRY_ID[iso2] ?? null;
 }
 
 /** Resolve display name for a region slug within a country. */
@@ -163,3 +121,6 @@ export function regionLabelForSlug(country: CountryId, slug: string): string | n
     }
     return null;
 }
+
+/** @deprecated Use COUNTRY_DEFINITIONS.italy.idToRegion */
+export const SVG_ID_TO_REGION: Record<string, string> = COUNTRY_DEFINITIONS.italy?.idToRegion ?? {};

@@ -50,7 +50,7 @@ export default function Filozofie() {
                 />
             </div>
 
-            <div className="relative z-10 bg-white px-8 py-16 md:absolute md:inset-y-0 md:right-0 md:flex md:w-[52%] md:items-center md:rounded-l-[3rem] md:px-14 md:py-20 lg:px-20">
+            <div className="relative z-10 bg-white px-8 py-16 md:absolute md:inset-y-0 md:right-0 md:flex md:w-[52%] md:items-center md:px-14 md:py-20 lg:px-20">
                 <FilozofieContent />
             </div>
         </section>
