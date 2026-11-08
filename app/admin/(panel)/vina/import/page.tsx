@@ -13,8 +13,8 @@ export default function ImportWinesPage() {
             </Link>
             <h1 className="mt-4 font-serif text-2xl text-black md:text-4xl">Import vín</h1>
             <p className="mt-2 max-w-2xl font-sans text-black/60">
-                Nahrajte JSON od klienta. Vína se stejným názvem se přeskočí, fotky doplníte později
-                v úpravě vína.
+                Zkopírujte prompt pro LLM, nechte si z podkladů vygenerovat JSON a nahrajte ho sem.
+                Vína se stejným názvem se přeskočí, fotky doplníte později v úpravě vína.
             </p>
             <div className="mt-8">
                 <WineImportForm prompt={prompt} exampleJson={exampleJson} />

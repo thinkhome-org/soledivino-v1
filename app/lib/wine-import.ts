@@ -93,7 +93,6 @@ addCountryAlias("fr", "france");
 addCountryAlias("espana", "spain");
 addCountryAlias("spanien", "spain");
 addCountryAlias("es", "spain");
-addCountryAlias("portugal", "portugal");
 addCountryAlias("pt", "portugal");
 addCountryAlias("schweiz", "switzerland");
 addCountryAlias("suisse", "switzerland");
@@ -102,10 +101,81 @@ addCountryAlias("ch", "switzerland");
 addCountryAlias("cesko", "czechia");
 addCountryAlias("ceska republika", "czechia");
 addCountryAlias("czech republic", "czechia");
+addCountryAlias("czech", "czechia");
 addCountryAlias("cz", "czechia");
+addCountryAlias("slovak", "slovakia");
+addCountryAlias("slovensko", "slovakia");
+addCountryAlias("sk", "slovakia");
+addCountryAlias("madarsko", "hungary");
+addCountryAlias("magyarorszag", "hungary");
+addCountryAlias("hu", "hungary");
+addCountryAlias("slovenija", "slovenia");
+addCountryAlias("si", "slovenia");
+addCountryAlias("hrvatska", "croatia");
+addCountryAlias("hr", "croatia");
+addCountryAlias("ellada", "greece");
+addCountryAlias("hellas", "greece");
+addCountryAlias("gr", "greece");
+addCountryAlias("romania", "romania");
+addCountryAlias("ro", "romania");
+addCountryAlias("bulgaria", "bulgaria");
+addCountryAlias("bg", "bulgaria");
+addCountryAlias("moldova", "moldova");
+addCountryAlias("md", "moldova");
+addCountryAlias("polska", "poland");
+addCountryAlias("pl", "poland");
+addCountryAlias("nederland", "netherlands");
+addCountryAlias("holland", "netherlands");
+addCountryAlias("nl", "netherlands");
+addCountryAlias("belgie", "belgium");
+addCountryAlias("belgien", "belgium");
+addCountryAlias("be", "belgium");
+addCountryAlias("danmark", "denmark");
+addCountryAlias("dk", "denmark");
+addCountryAlias("sverige", "sweden");
+addCountryAlias("se", "sweden");
+addCountryAlias("norge", "norway");
+addCountryAlias("no", "norway");
+addCountryAlias("suomi", "finland");
+addCountryAlias("fi", "finland");
+addCountryAlias("eire", "ireland");
+addCountryAlias("ie", "ireland");
 addCountryAlias("uk", "united_kingdom");
 addCountryAlias("great britain", "united_kingdom");
+addCountryAlias("britain", "united_kingdom");
+addCountryAlias("england", "united_kingdom");
 addCountryAlias("gb", "united_kingdom");
+addCountryAlias("srbija", "serbia");
+addCountryAlias("rs", "serbia");
+addCountryAlias("crna gora", "montenegro");
+addCountryAlias("me", "montenegro");
+addCountryAlias("bosna", "bosnia");
+addCountryAlias("bosnia and herzegovina", "bosnia");
+addCountryAlias("ba", "bosnia");
+addCountryAlias("makedonija", "north_macedonia");
+addCountryAlias("macedonia", "north_macedonia");
+addCountryAlias("mk", "north_macedonia");
+addCountryAlias("shqiperia", "albania");
+addCountryAlias("al", "albania");
+addCountryAlias("ukraina", "ukraine");
+addCountryAlias("ua", "ukraine");
+addCountryAlias("byelorussia", "belarus");
+addCountryAlias("by", "belarus");
+addCountryAlias("lietuva", "lithuania");
+addCountryAlias("lt", "lithuania");
+addCountryAlias("latvija", "latvia");
+addCountryAlias("lv", "latvia");
+addCountryAlias("eesti", "estonia");
+addCountryAlias("ee", "estonia");
+addCountryAlias("islande", "iceland");
+addCountryAlias("is", "iceland");
+addCountryAlias("kypros", "cyprus");
+addCountryAlias("cy", "cyprus");
+addCountryAlias("letzebuerg", "luxembourg");
+addCountryAlias("lu", "luxembourg");
+addCountryAlias("li", "liechtenstein");
+addCountryAlias("ad", "andorra");
+addCountryAlias("xk", "kosovo");
 
 const REGION_INDEX = Object.fromEntries(COUNTRY_ORDER.map((id) => [id, new Map()])) as Record<
     CountryId,
@@ -510,6 +580,7 @@ export function parseWineImportPayload(raw: string, existing: Product[]): ParseW
 export const WINE_IMPORT_EXAMPLE = {
     name: "Barolo Bussia",
     country: "italy",
+    region: "Itálie",
     regione: "Piemonte",
     type: "red",
     alcohol: "14%",
@@ -537,48 +608,65 @@ export function getWineImportExampleJson(): string {
 }
 
 export function getWineImportPrompt(): string {
+    const countryTable = COUNTRY_ORDER.map(
+        (id) => `- "${id}" → region "${COUNTRY_LABELS[id]}" (ISO ${COUNTRY_ID_TO_ISO2[id]})`,
+    ).join("\n");
+
     const regionBlocks = COUNTRY_ORDER.map((id) => {
-        const regions = COUNTRY_DEFINITIONS[id].regions.map((region) => `- ${region}`).join("\n");
+        const regions = COUNTRY_DEFINITIONS[id].regions.join(", ");
         return `${COUNTRY_LABELS[id]} (country: "${id}"):\n${regions}`;
     }).join("\n\n");
+
+    const countryIds = COUNTRY_ORDER.map((id) => `"${id}"`).join(" | ");
 
     return `ÚKOL
 Z podkladů, které ti uživatel pošle (seznam vín, tabulka, e-mail, text, PDF přepis), vytvoř importní JSON pro katalog Soledivino.
 
 VÝSTUP
-- Vrať POUZE validní JSON — nic jiného. Žádný komentář, žádný úvod, žádné markdown plotýnky.
+- Vrať POUZE validní JSON — nic jiného. Žádný komentář, žádný úvod, žádné markdown plotýnky (\`\`\`).
 - Kořen je pole objektů: [ { ... }, { ... } ]
 - Kódování UTF-8. Soubor pojmenuj wines-import.json.
-- Nepřidávej pole id, slug, image, color — ty doplníme my.
+- Nepřidávej pole id, slug, image, color — ty doplníme my automaticky.
+- Klíče piš přesně anglicky (name, country, regione, …). Hodnoty popisů piš česky.
 
-POVINNÁ POLE u každého vína
+POVINNÁ POLE u každého vína (všechna musí být vyplněná)
 - name (string) — přesný název vína
-- country — přesně jedna hodnota z: ${COUNTRY_ORDER.map((id) => `"${id}"`).join(" | ")}
-- regione — přesný název správního regionu ze seznamu níže (NE apelace typu Barolo / Chianti / Bordeaux)
+- country — přesně jedna hodnota z: ${countryIds}
+- region — český název země na kartě / detailu; musí odpovídat country (viz tabulka níže), např. "Itálie", "Španělsko", "Česko"
+- regione — přesný název správního regionu ze seznamu REGIONY níže (NE apelace typu Barolo / Chianti / Bordeaux / Rioja / Douro)
 - type — přesně: "red" | "white" | "rose"
+- alcohol — např. "13,5 %" nebo "14%". Pokud v podkladech chybí, použij "xx%"
+- volume — např. "0.75l". Pokud chybí, použij "0.75l"
+- vintage — ročník, např. "2021". Pokud chybí, použij "2020"
 - description — krátký úvod na detail vína, 1–3 věty česky
 
-VOLITELNÁ POLE (vyplň, pokud to z podkladů víš; jinak pole úplně vynech)
-- region — text na kartě, typicky "Itálie" / "Francie" / "Německo" / "Rakousko"
-- alcohol — např. "13,5 %"
-- volume — např. "0.75l"
-- vintage — ročník, např. "2021"
-- aroma
-- tasteProfile
-- finish
-- terroir
+DOPORUČENÁ POLE (vyplň vždy, když to z podkladů jde; jinak pole úplně vynech)
+- aroma — vůně
+- tasteProfile — chuť / tělo
+- finish — závěr
+- terroir — místo, půda, klima (stručně)
 - winemaker — kdo to dělá, kde, jak dlouho, čím je vinařství specifické
 - winemakerPhilosophy — postoj k vinici a sklepu, 1–3 věty
 - productionStyle — "traditional" | "modern"
 - productionStyleNote — proč je víno tradiční / moderní, lidsky
 - naturalCategory — "classic" | "low-intervention" | "natural" | "biodynamic" | "orange"
 - pairing — jídlo
-- emotionalTrace — nálada / situace (volitelné, krátce)
+- emotionalTrace — nálada / situace, krátce
+
+MAPOVÁNÍ ZEMÍ (country → region)
+${countryTable}
+
+PRAVIDLA PRO ZEMI A REGION
+- country musí být přesný slug z tabulky výše (např. "italy", ne "Itálie").
+- region je český popisek země z téže tabulky (např. "Itálie").
+- regione musí být přesná shoda s jedním názvem ze seznamu REGIONY pro danou zemi.
+- Pokud podklady uvádí jen apelaci (Barolo, Chianti Classico, Rioja, Douro…), mapuj ji na správní region (Piemonte, Toscana, La Rioja, …).
+- Pokud zemi nelze bezpečně určit, záznam vynech — nevymýšlej.
 
 JAZYK A TÓN
 - Všechny popisy piš česky.
 - Klidný, řemeslný tón. Bez klišé („symfonie chutí“, „nebeský zážitek“, „unikátní terroir“).
-- Nevymýšlej ročník, alkohol, jméno vinaře ani fakta, která v podkladech nejsou. Neznámé pole vynech.
+- Nevymýšlej ročník, alkohol, jméno vinaře ani fakta, která v podkladech nejsou.
 - Jeden objekt = jedno víno. Stejný vinař u více vín se zopakuje v poli winemaker u každého vína.
 
 REGIONY (pole regione — použij přesně tento řetězec)

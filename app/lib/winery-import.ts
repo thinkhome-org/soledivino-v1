@@ -1,5 +1,6 @@
 import type { Product, Winery } from "./content-types";
 import { newId } from "./content-migrate";
+import { COUNTRY_LABELS, COUNTRY_ORDER } from "./regions";
 import { findWineBySlug, toWineSlug } from "./wine-slug";
 
 export const WINERY_IMPORT_MAX_ITEMS = 100;
@@ -187,20 +188,23 @@ export function getWineryImportExampleJson(): string {
 }
 
 export function getWineryImportPrompt(): string {
+    const countries = COUNTRY_ORDER.map((id) => `"${COUNTRY_LABELS[id]}"`).join(", ");
+
     return `ÚKOL
 Z podkladů o vinařstvích vytvoř importní JSON pro katalog Soledivino.
 
 VÝSTUP
-- Vrať POUZE validní JSON — nic jiného. Žádný komentář, žádný úvod, žádné markdown plotýnky.
+- Vrať POUZE validní JSON — nic jiného. Žádný komentář, žádný úvod, žádné markdown plotýnky (\`\`\`).
 - Kořen je pole objektů: [ { ... }, { ... } ]
 - Kódování UTF-8. Soubor pojmenuj wineries-import.json.
+- Nepřidávej pole id — to doplníme my.
 
 POVINNÁ POLE u každého vinařství
 - name (string) — název vinařství
-- country — země zobrazená na detailu, např. "Itálie"
+- country — český název země na detailu, přesně jedna z: ${countries}
 - description — 2–4 věty česky o vinařství
 
-VOLITELNÁ POLE
+VOLITELNÁ POLE (vyplň, pokud to z podkladů víš; jinak pole úplně vynech)
 - slug — URL část, např. "antinori". Pokud chybí, vytvoří se z názvu.
 - logo — URL loga (jinak se na mřížce zobrazí název)
 - tileImage — fotka na mřížce

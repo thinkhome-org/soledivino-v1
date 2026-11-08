@@ -13,8 +13,9 @@ export default function ImportWineriesPage() {
             </Link>
             <h1 className="mt-4 font-serif text-2xl text-black md:text-4xl">Import vinařství</h1>
             <p className="mt-2 max-w-2xl font-sans text-black/60">
-                Nahrajte JSON. Existující vinařství se stejným slugem se přepíší, nová se přidají.
-                Neznámé slugy vín se přeskočí.
+                Zkopírujte prompt pro LLM, nechte si z podkladů vygenerovat JSON a nahrajte ho sem.
+                Existující vinařství se stejným slugem se přepíší, nová se přidají. Neznámé slugy vín
+                se přeskočí.
             </p>
             <div className="mt-8">
                 <WineryImportForm prompt={prompt} exampleJson={exampleJson} />

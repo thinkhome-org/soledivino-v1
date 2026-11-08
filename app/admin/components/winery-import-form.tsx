@@ -69,10 +69,10 @@ export default function WineryImportForm({ prompt, exampleJson }: WineryImportFo
             <section className="rounded-2xl border border-black/10 bg-white p-5 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <h2 className="font-serif text-xl text-black">Prompt pro klienta</h2>
+                        <h2 className="font-serif text-xl text-black">Prompt pro LLM</h2>
                         <p className="mt-1 font-sans text-sm text-black/60">
-                            Pošlete ho spolu s podklady o vinařstvích do ChatGPT / Claude. Výstup je soubor k
-                            importu.
+                            Pošlete ho spolu s podklady o vinařstvích do ChatGPT / Claude. Obsahuje
+                            povinná pole a všechny země Evropy. Výstup vložte níže.
                         </p>
                     </div>
                     <button
@@ -83,7 +83,7 @@ export default function WineryImportForm({ prompt, exampleJson }: WineryImportFo
                         {copied === "prompt" ? "Zkopírováno" : "Kopírovat prompt"}
                     </button>
                 </div>
-                <pre className="mt-4 max-h-72 overflow-auto whitespace-pre-wrap rounded-xl bg-black/[0.03] p-4 font-sans text-xs leading-relaxed text-black/75">
+                <pre className="mt-4 max-h-[28rem] overflow-auto whitespace-pre-wrap rounded-xl bg-black/[0.03] p-4 font-sans text-xs leading-relaxed text-black/75">
                     {prompt}
                 </pre>
             </section>
